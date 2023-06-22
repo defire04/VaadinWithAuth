@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -58,10 +59,10 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        addKeyPressListener(Key.ENTER, e -> save());
+        addKeyPressListener(Key.ENTER, e -> saveOrUpdateUserViaAdmin());
 
         addAdminButton.addClickListener(e -> makeAdmin(user));
-        save.addClickListener(e -> save());
+        save.addClickListener(e -> saveOrUpdateUserViaAdmin());
         delete.addClickListener(e -> delete());
         cancel.addClickListener(e -> cancel());
         edit.addClickListener(e -> editUser(user));
@@ -78,9 +79,12 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         changeHandler.onChange();
     }
 
-    public void save() {
-        userService.save(user);
+    public void saveOrUpdateUserViaAdmin() {
+        userService.saveOrUpdateUserViaAdmin(user);
         changeHandler.onChange();
+
+
+//        fireEvent(new RefreshGridEvent(this));
     }
 
     public void cancel() {
@@ -104,6 +108,5 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     public void setChangeHandler(ChangeHandler changeHandler) {
         this.changeHandler = changeHandler;
     }
-
-
 }
+

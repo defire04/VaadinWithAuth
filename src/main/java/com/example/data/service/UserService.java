@@ -16,15 +16,12 @@ import java.util.*;
 
 @Service
 public class UserService {
-
-
-    public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
-    }
-
     private final UserRepository userRepository;
+    private final PasswordService passwordService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordService passwordService) {
         this.userRepository = userRepository;
+        this.passwordService = passwordService;
     }
 
     public List<User> getAll() {
@@ -38,17 +35,23 @@ public class UserService {
     public void login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Login failed"));
 
-        if (user.getPassword().equals(password)) {
+        if (passwordService.matches(password, user.getPassword())) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
             createRoutes(user.getRoles());
         }
+
+//        if (user.getPassword().equals(password)) {
+//            VaadinSession.getCurrent().setAttribute(User.class, user);
+//            createRoutes(user.getRoles());
+//        }
 
     }
 
     public void register(User entity) {
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
+            entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);
-        } else{
+        } else {
             throw new RuntimeException("Register failed");
         }
     }
@@ -57,10 +60,11 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void save(User user) {
-        if(findByUsername(user.getUsername()).isEmpty()){
-            userRepository.save(new User(user.getUsername(), user.getPassword(), user.getName(), user.getEmail()));
-        } else{
+    public void saveOrUpdateUserViaAdmin(User user) {
+        if (findByUsername(user.getUsername()).isEmpty()) {
+            userRepository.save(new User(user.getUsername(), passwordService.hashPassword(passwordService.generateRandomPassword()),
+                    user.getName(), user.getEmail()));
+        } else {
             userRepository.save(user);
         }
     }
@@ -87,12 +91,14 @@ public class UserService {
     }
 
 
-    public void addAdminRights(User editedUser){
+    public void addAdminRights(User editedUser) {
         Optional<User> user = findByUsername(editedUser.getUsername());
-        if(user.isPresent()){
+        if (user.isPresent()) {
             user.get().addRole(Role.ADMIN);
             userRepository.save(user.get());
         }
+    }
 
+    public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
     }
 }

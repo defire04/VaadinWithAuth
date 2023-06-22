@@ -1,5 +1,6 @@
 package com.example.views;
 
+import com.example.components.RefreshGridEvent;
 import com.example.components.UserEditor;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
@@ -20,6 +21,7 @@ public class AdminView extends VerticalLayout {
         grid.setAllRowsVisible(true);
 
         grid.setColumns("username", "name", "email", "roles", "password");
+
         grid.setItems(userService.getAll());
 
         Button addNewBtn = new Button("Add new");
@@ -27,6 +29,7 @@ public class AdminView extends VerticalLayout {
         add(toolBar, grid, userEditor);
 
         grid.setHeight("300px");
+
 
         grid.asSingleSelect().addValueChangeListener(e -> {
             userEditor.editUser(e.getValue());
@@ -36,11 +39,9 @@ public class AdminView extends VerticalLayout {
 
         userEditor.setChangeHandler(() -> {
             userEditor.setVisible(false);
-
+            grid.setItems(userService.getAll());
         });
 
 
     }
-
-
 }
