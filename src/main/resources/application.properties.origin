@@ -2,11 +2,21 @@ server.port=${PORT:8080}
 logging.level.org.atmosphere = warn
 spring.mustache.check-template-location = false
 
-vaadin.launch-browser=true
 
-spring.datasource.url = jdbc:postgresql://localhost:5432/test_task_db
-spring.datasource.username =
-spring.datasource.password =
+vaadin.launch-browser=true
+# PostgreSQL configuration.
+#spring.datasource.url = jdbc:postgresql://localhost:5432/test_task_db
+#spring.datasource.username =
+#spring.datasource.password =
+
+# H2 configuration
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=sa
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+
 spring.jpa.properties.hibernate.show_sql=true
 spring.jpa.hibernate.ddl-auto = update
 
