@@ -29,8 +29,6 @@ public class User {
         this.name = name;
         this.email = email;
 
-//        this.role = "ROLE_USER";
-//        this.role = "ROLE_ADMIN";
     }
 
     public User() {

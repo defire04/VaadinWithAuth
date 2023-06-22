@@ -12,10 +12,7 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -34,13 +31,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     public void login(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Login failed"));
+
+        if (user.getPassword().equals(password)) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
             createRoutes(user.getRoles());
         }
@@ -48,9 +46,10 @@ public class UserService {
     }
 
     public void register(User entity) {
-        User user = userRepository.findByUsername(entity.getUsername());
-        if (user == null) {
+        if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             userRepository.save(entity);
+        } else{
+            throw new RuntimeException("Register failed");
         }
     }
 
@@ -59,16 +58,17 @@ public class UserService {
     }
 
     public void save(User user) {
-        userRepository.save(user);
+        if(findByUsername(user.getUsername()).isEmpty()){
+            userRepository.save(new User(user.getUsername(), user.getPassword(), user.getName(), user.getEmail()));
+        } else{
+            userRepository.save(user);
+        }
     }
 
     private void createRoutes(Set<Role> roles) {
-
         getAuthorizedRoutes(roles)
                 .forEach(route -> RouteConfiguration.forSessionScope().setRoute(route.route, route.view));
 
-//        System.out.println("+=============");
-//        RouteConfiguration.forSessionScope().getAvailableRoutes().stream().forEach(e -> System.out.println(e.getNavigationTarget()));
     }
 
     public Set<AuthorizedRoute> getAuthorizedRoutes(Set<Role> roles) {
@@ -88,10 +88,10 @@ public class UserService {
 
 
     public void addAdminRights(User editedUser){
-        User user = userRepository.findByUsername(editedUser.getUsername());
-        if(user != null){
-            user.addRole(Role.ADMIN);
-            userRepository.save(user);
+        Optional<User> user = findByUsername(editedUser.getUsername());
+        if(user.isPresent()){
+            user.get().addRole(Role.ADMIN);
+            userRepository.save(user.get());
         }
 
     }
