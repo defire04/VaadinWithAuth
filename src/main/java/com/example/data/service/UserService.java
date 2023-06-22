@@ -88,11 +88,21 @@ public class UserService {
         return routes;
     }
 
-
     public void addAdminRights(User editedUser) {
         Optional<User> user = findByUsername(editedUser.getUsername());
         if (user.isPresent()) {
             user.get().addRole(Role.ADMIN);
+            userRepository.save(user.get());
+        }
+    }
+
+    public void refreshPassword(User editedUser) {
+        Optional<User> user = findByUsername(editedUser.getUsername());
+        if (user.isPresent()) {
+            String newPassword = passwordService.generateRandomPassword();
+            user.get().setPassword(passwordService.hashPassword(newPassword));
+            emailSenderService.sendEmail(user.get().getEmail(), newPassword);
+
             userRepository.save(user.get());
         }
     }

@@ -35,6 +35,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     private Button cancel = new Button("Cancel");
     private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
     private Button edit = new Button("Edit");
+    private Button refreshPassword = new Button("Refresh password");
     private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
 
     private Binder<User> binder = new Binder<>(User.class);
@@ -47,12 +48,14 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     public UserEditor(UserService userService) {
         this.userService = userService;
 
+        refreshPassword.addThemeVariants(ButtonVariant.LUMO_ERROR,
+                ButtonVariant.LUMO_SMALL);
         addAdminButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_SUCCESS);
 
         edit.setVisible(false);
 
-        add(username, name, email, addAdminButton, actions);
+        add(username, name, email, refreshPassword, addAdminButton, actions);
         binder.bindInstanceFields(this);
 
         setSpacing(true);
@@ -62,6 +65,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
         addKeyPressListener(Key.ENTER, e -> saveOrUpdateUserViaAdmin());
 
+        refreshPassword.addClickListener(e-> refreshPassword(user));
         addAdminButton.addClickListener(e -> makeAdmin(user));
         save.addClickListener(e -> saveOrUpdateUserViaAdmin());
         delete.addClickListener(e -> delete());
@@ -69,6 +73,11 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         edit.addClickListener(e -> editUser(user));
 
         setVisible(false);
+    }
+
+    private void refreshPassword(User user){
+        userService.refreshPassword(user);
+        changeHandler.onChange();
     }
 
     private void makeAdmin(User user) {
