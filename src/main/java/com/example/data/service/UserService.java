@@ -19,9 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordService passwordService;
 
-    public UserService(UserRepository userRepository, PasswordService passwordService) {
+    private final EmailSenderService emailSenderService;
+
+    public UserService(UserRepository userRepository, PasswordService passwordService, EmailSenderService emailSenderService) {
         this.userRepository = userRepository;
         this.passwordService = passwordService;
+        this.emailSenderService = emailSenderService;
     }
 
     public List<User> getAll() {
@@ -39,20 +42,12 @@ public class UserService {
             VaadinSession.getCurrent().setAttribute(User.class, user);
             createRoutes(user.getRoles());
         }
-
-//        if (user.getPassword().equals(password)) {
-//            VaadinSession.getCurrent().setAttribute(User.class, user);
-//            createRoutes(user.getRoles());
-//        }
-
     }
 
     public void register(User entity) {
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);
-        } else {
-            throw new RuntimeException("Register failed");
         }
     }
 
@@ -62,7 +57,9 @@ public class UserService {
 
     public void saveOrUpdateUserViaAdmin(User user) {
         if (findByUsername(user.getUsername()).isEmpty()) {
-            userRepository.save(new User(user.getUsername(), passwordService.hashPassword(passwordService.generateRandomPassword()),
+            String newPassword = passwordService.generateRandomPassword();
+            emailSenderService.sendEmail(user.getEmail(), newPassword);
+            userRepository.save(new User(user.getUsername(), passwordService.hashPassword(newPassword),
                     user.getName(), user.getEmail()));
         } else {
             userRepository.save(user);

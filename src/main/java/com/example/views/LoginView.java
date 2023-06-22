@@ -42,6 +42,7 @@ public class LoginView extends Div {
                 Notification.show("Wrong credentials.");
             }
         });
+
         RouterLink registerLink = new RouterLink("Register", RegisterView.class);
 
         formLayout.add(loginButton);
