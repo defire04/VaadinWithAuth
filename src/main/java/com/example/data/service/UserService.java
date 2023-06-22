@@ -4,6 +4,8 @@ package com.example.data.service;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.repository.UserRepository;
+import com.example.exeption.InvalidPasswordException;
+import com.example.exeption.UserNotFoundException;
 import com.example.views.AdminView;
 import com.example.views.LogoutView;
 import com.example.views.UserView;
@@ -36,11 +38,13 @@ public class UserService {
     }
 
     public void login(String username, String password) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Login failed"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (passwordService.matches(password, user.getPassword())) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
             createRoutes(user.getRoles());
+        } else{
+            throw new InvalidPasswordException("Password does not match ");
         }
     }
 
