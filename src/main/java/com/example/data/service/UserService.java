@@ -79,14 +79,15 @@ public class UserService {
         Set<AuthorizedRoute> routes = new HashSet<>();
 
         roles.forEach(role -> {
-            if (role.equals(Role.ADMIN)) {
-                routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
-            } else if (role.equals(Role.USER)) {
-                routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
+            switch (role) {
+                case ADMIN:
+                    routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
+                case USER:
+                    routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
+                case BLOCKED:
+                    routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
             }
         });
-        routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
-
         return routes;
     }
 

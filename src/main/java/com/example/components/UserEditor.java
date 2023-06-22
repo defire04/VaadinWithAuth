@@ -51,6 +51,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
                 ButtonVariant.LUMO_SUCCESS);
 
         edit.setVisible(false);
+
         add(username, name, email, addAdminButton, actions);
         binder.bindInstanceFields(this);
 
@@ -72,6 +73,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
     private void makeAdmin(User user) {
         userService.addAdminRights(user);
+        changeHandler.onChange();
     }
 
     public void delete() {
@@ -82,9 +84,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     public void saveOrUpdateUserViaAdmin() {
         userService.saveOrUpdateUserViaAdmin(user);
         changeHandler.onChange();
-
-
-//        fireEvent(new RefreshGridEvent(this));
     }
 
     public void cancel() {

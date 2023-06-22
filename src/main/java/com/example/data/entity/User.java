@@ -2,6 +2,9 @@ package com.example.data.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,13 +17,19 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Column(name="password")
+    @NotEmpty(message = "Password should be not empty!")
+    @Size(min = 8, message = "Password must be more than 8 characters!")
     private String password;
+    @Column(name="name")
     private String name;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "username"))
     @Enumerated(EnumType.STRING)
     private final Set<Role> roles = new HashSet<>(Collections.singletonList(Role.USER));
-
+    @Column(name = "email", nullable = false)
+    @Email
+    @NotEmpty(message = "Email should be not empty!")
     private String email;
 
     public User(String username, String password, String name, String email) {

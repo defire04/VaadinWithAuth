@@ -1,6 +1,6 @@
 package com.example.views;
 
-import com.example.components.RefreshGridEvent;
+
 import com.example.components.UserEditor;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
@@ -10,8 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-
 
 public class AdminView extends VerticalLayout {
 
@@ -41,7 +39,5 @@ public class AdminView extends VerticalLayout {
             userEditor.setVisible(false);
             grid.setItems(userService.getAll());
         });
-
-
     }
 }
