@@ -5,6 +5,7 @@ import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.repository.UserRepository;
 import com.example.exeption.InvalidPasswordException;
+import com.example.exeption.UserAlreadyExists;
 import com.example.exeption.UserNotFoundException;
 import com.example.views.AdminView;
 import com.example.views.LogoutView;
@@ -20,13 +21,15 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordService passwordService;
-
     private final EmailSenderService emailSenderService;
+
+    private final HashMap<String, VaadinSession> usersSession = new HashMap<>();
 
     public UserService(UserRepository userRepository, PasswordService passwordService, EmailSenderService emailSenderService) {
         this.userRepository = userRepository;
         this.passwordService = passwordService;
         this.emailSenderService = emailSenderService;
+
     }
 
     public List<User> getAll() {
@@ -38,20 +41,25 @@ public class UserService {
     }
 
     public void login(String username, String password) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
 
         if (passwordService.matches(password, user.getPassword())) {
+
             VaadinSession.getCurrent().setAttribute(User.class, user);
+            usersSession.put(username, VaadinSession.getCurrent());
             createRoutes(user.getRole());
         } else {
-            throw new InvalidPasswordException("Password does not match ");
+            throw new InvalidPasswordException("Password does not match!");
         }
     }
 
     public void register(User entity) {
+
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);
+        } else {
+            throw new UserAlreadyExists("User already exists!");
         }
     }
 
@@ -73,7 +81,6 @@ public class UserService {
     private void createRoutes(Role role) {
         getAuthorizedRoutes(role)
                 .forEach(route -> RouteConfiguration.forSessionScope().setRoute(route.route, route.view));
-
     }
 
     public Set<AuthorizedRoute> getAuthorizedRoutes(Role role) {
@@ -91,11 +98,15 @@ public class UserService {
         return routes;
     }
 
-    public void addAdminRights(User editedUser) {
-        Optional<User> user = findByUsername(editedUser.getUsername());
+    public void updateUserRole(User updatedUser, Role newRole){
+        Optional<User> user = findByUsername(updatedUser.getUsername());
         if (user.isPresent()) {
-            user.get().setRole(Role.ADMIN);
+            user.get().setRole(newRole);
             userRepository.save(user.get());
+            VaadinSession session = usersSession.get(updatedUser.getUsername());
+
+            session.getSession().invalidate();
+            session.close();
         }
     }
 
@@ -109,6 +120,7 @@ public class UserService {
             userRepository.save(user.get());
         }
     }
+
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
     }

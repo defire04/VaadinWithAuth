@@ -1,57 +1,54 @@
 package com.example.views;
 
+import com.example.components.RegistrationForm;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
-import com.vaadin.flow.component.Component;
+import com.example.exeption.UserAlreadyExists;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 
 @Route(value = "register")
 @Tag("register-view")
 @PageTitle("Register")
-public class RegisterView extends Div {
-    private UserService authService;
+public class RegisterView extends VerticalLayout {
+    private final UserService authService;
 
     public RegisterView(UserService authService) {
         this.authService = authService;
-        setId("register-view");
-        TextField username = new TextField("Username");
-        PasswordField password = new PasswordField("Password");
-        TextField name = new TextField("Name");
-        EmailField email = new EmailField("Email");
+        addClassName("register-view");
 
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(username, name, email, password);
 
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2)
-                );
-        add(formLayout);
+        RegistrationForm registrationForm = new RegistrationForm();
 
-        Button registerButton = new Button("Register", event -> {
+        add(registrationForm);
+
+        registrationForm.getRegister().addClickListener(event -> {
             try {
-                authService.register(new User(username.getValue(), password.getValue(), name.getValue(), email.getValue()));
+                authService.register(new User(registrationForm.getUserForm().getUsername(), registrationForm.getPassword(),
+                        registrationForm.getUserForm().getName(), registrationForm.getUserForm().getEmail()));
                 UI.getCurrent().navigate("home");
-            } catch (Exception e) {
-                Notification.show("Wrong credentials.");
+            } catch (UserAlreadyExists e) {
+
+                Notification.show(e.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
-        RouterLink registerLink = new RouterLink("Login", LoginView.class);
 
-        formLayout.add(registerButton);
-        formLayout.add(registerLink);
+
+
+
+//        setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, registrationForm);
+
+        add(registrationForm);
 
     }
 }

@@ -2,6 +2,7 @@ package com.example.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 
 public class AdminEditForm extends EditForm {
@@ -9,16 +10,19 @@ public class AdminEditForm extends EditForm {
     private Button addAdminButton;
     private Button refreshPassword;
 
+    private Button block;
+
     public AdminEditForm() {
         addClassName("admin-edit-form");
         edit = new Button("Edit");
 
         addAdminButton = new Button("Make admin");
         refreshPassword = new Button("Reset password");
+        block = new Button("Block");
 
         setStyles();
 
-        getUserForm().getVerticalLayout().add(addAdminButton, refreshPassword);
+        getUserForm().getVerticalLayout().add(new HorizontalLayout(addAdminButton, block), refreshPassword);
         add(getUserForm());
     }
 
@@ -59,4 +63,11 @@ public class AdminEditForm extends EditForm {
         this.refreshPassword = refreshPassword;
     }
 
+    public Button getBlock() {
+        return block;
+    }
+
+    public void setBlock(Button block) {
+        this.block = block;
+    }
 }

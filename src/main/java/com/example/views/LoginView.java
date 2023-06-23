@@ -1,5 +1,6 @@
 package com.example.views;
 
+import com.example.components.LoginFormMy;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
 import com.example.exeption.LoginFormException;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteConfiguration;
@@ -23,20 +25,20 @@ public class LoginView extends Div {
 
     public LoginView(UserService authService) {
         addClassName("login-view");
+
         UI.getCurrent().getElement().getThemeList().add("dark");
 
+        logoutIfUserLogIn();
 
-        VaadinSession session = VaadinSession.getCurrent();
-        if (session.getAttribute(User.class) != null) {
-            UI.getCurrent().getPage().setLocation("login");
-            session.close();
-        }
+        LoginFormMy loginFormMy = new LoginFormMy();
+        LoginForm loginForm = loginFormMy.getLoginForm();
 
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        LoginForm loginForm = new LoginForm();
-
+        setSizeFull();
+        getStyle().setDisplay(Style.Display.FLEX)
+                .set("align-items", "center")
+                .set("justify-content", "center")
+                .set("min-height", "100vh")
+        ;
 
         loginForm.addLoginListener(event -> {
             try {
@@ -47,23 +49,15 @@ public class LoginView extends Div {
 //                Notification.show(e.getMessage());
             }
         });
-
-        Button register = new Button("Register", event -> {
-            UI.getCurrent().navigate("register");
-        });
-        Button logout = new Button("Log out", event -> {
-            UI.getCurrent().navigate("logout");
-        });
+        add(loginFormMy);
+    }
 
 
-        horizontalLayout.add(register, logout);
-        verticalLayout.add(loginForm, horizontalLayout);
-
-        loginForm.getStyle()
-                .setMargin("0 auto");
-        horizontalLayout.getStyle()
-                .setMargin("0 auto");
-
-        add(verticalLayout);
+    public void logoutIfUserLogIn() {
+        VaadinSession session = VaadinSession.getCurrent();
+        if (session.getAttribute(User.class) != null) {
+            UI.getCurrent().getPage().setLocation("login");
+            session.close();
+        }
     }
 }

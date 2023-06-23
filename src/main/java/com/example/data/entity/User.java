@@ -23,11 +23,10 @@ public class User {
     private String password;
     @Column(name="name")
     private String name;
-//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "username"))
     @Enumerated(EnumType.STRING)
     private  Role role = Role.USER;
-//    private final Set<Role> roles = new HashSet<>(Collections.singletonList(Role.USER));
     @Column(name = "email", nullable = false)
     @Email
     @NotEmpty(message = "Email should be not empty!")

@@ -1,6 +1,7 @@
 package com.example.components;
 
 
+import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.Key;
@@ -28,20 +29,8 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
     private final UserService userService;
     private User user;
-
-//    private UserForm userForm;
-
-//    private Button save = new Button("Save", VaadinIcon.CHECK.create());
-//    private Button cancel = new Button("Cancel");
-//    private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-//    private Button edit = new Button("Edit");
-
-//    private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
-
-    private Binder<User> binder = new Binder<>(User.class);
+    private final Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
-
-    private AdminEditForm adminEditForm;
 
     public interface ChangeHandler {
         void onChange();
@@ -50,7 +39,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     public UserEditor(UserService userService) {
         this.userService = userService;
 
-        adminEditForm = new AdminEditForm();
+        AdminEditForm adminEditForm = new AdminEditForm();
         adminEditForm.getStyle().setMargin("0 auto");
 
         add(adminEditForm);
@@ -65,11 +54,16 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         adminEditForm.getDelete().addClickListener(e -> delete());
         adminEditForm.getCancel().addClickListener(e -> cancel());
         adminEditForm.getEdit().addClickListener(e -> editUser(user));
-
+        adminEditForm.getBlock().addClickListener(e -> blockUser(user));
         setVisible(false);
 
 
     }
+    private void blockUser(User user){
+        userService.updateUserRole(user, Role.BLOCKED);
+        changeHandler.onChange();
+    }
+
 
     private void refreshPassword(User user){
         userService.refreshPassword(user);
@@ -77,7 +71,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     }
 
     private void makeAdmin(User user) {
-        userService.addAdminRights(user);
+        userService.updateUserRole(user, Role.ADMIN);
         changeHandler.onChange();
     }
 
