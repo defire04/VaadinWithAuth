@@ -8,6 +8,7 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -27,19 +29,19 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     private final UserService userService;
     private User user;
 
-    private TextField username = new TextField("Username");
-    private TextField name = new TextField("Name");
-    private EmailField email = new EmailField("Email");
-    private Button addAdminButton = new Button("Make admin");
-    private Button save = new Button("Save", VaadinIcon.CHECK.create());
-    private Button cancel = new Button("Cancel");
-    private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-    private Button edit = new Button("Edit");
-    private Button refreshPassword = new Button("Refresh password");
-    private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+//    private UserForm userForm;
+
+//    private Button save = new Button("Save", VaadinIcon.CHECK.create());
+//    private Button cancel = new Button("Cancel");
+//    private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
+//    private Button edit = new Button("Edit");
+
+//    private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
 
     private Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
+
+    private AdminEditForm adminEditForm;
 
     public interface ChangeHandler {
         void onChange();
@@ -48,31 +50,25 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     public UserEditor(UserService userService) {
         this.userService = userService;
 
-        refreshPassword.addThemeVariants(ButtonVariant.LUMO_ERROR,
-                ButtonVariant.LUMO_SMALL);
-        addAdminButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
-                ButtonVariant.LUMO_SUCCESS);
+        adminEditForm = new AdminEditForm();
+        adminEditForm.getStyle().setMargin("0 auto");
 
-        edit.setVisible(false);
+        add(adminEditForm);
 
-        add(username, name, email, refreshPassword, addAdminButton, actions);
-        binder.bindInstanceFields(this);
-
+        binder.bindInstanceFields(adminEditForm.getUserForm());
         setSpacing(true);
 
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-
         addKeyPressListener(Key.ENTER, e -> saveOrUpdateUserViaAdmin());
-
-        refreshPassword.addClickListener(e-> refreshPassword(user));
-        addAdminButton.addClickListener(e -> makeAdmin(user));
-        save.addClickListener(e -> saveOrUpdateUserViaAdmin());
-        delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> cancel());
-        edit.addClickListener(e -> editUser(user));
+        adminEditForm.getRefreshPassword().addClickListener(e-> refreshPassword(user));
+        adminEditForm.getAddAdminButton().addClickListener(e -> makeAdmin(user));
+        adminEditForm.getSave().addClickListener(e -> saveOrUpdateUserViaAdmin());
+        adminEditForm.getDelete().addClickListener(e -> delete());
+        adminEditForm.getCancel().addClickListener(e -> cancel());
+        adminEditForm.getEdit().addClickListener(e -> editUser(user));
 
         setVisible(false);
+
+
     }
 
     private void refreshPassword(User user){
@@ -110,7 +106,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         binder.setBean(user);
 
         setVisible(true);
-        name.focus();
     }
 
     public void setChangeHandler(ChangeHandler changeHandler) {

@@ -1,5 +1,6 @@
 package com.example.views;
 
+import com.example.data.entity.User;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
@@ -10,6 +11,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.WrappedSession;
 
 @Route(value = "login")
 @Tag("login-view")
@@ -19,6 +23,14 @@ public class LoginView extends Div {
     public LoginView(UserService authService) {
 
         UI.getCurrent().getElement().getThemeList().add("dark");
+
+
+        VaadinSession session = VaadinSession.getCurrent();
+        if (session.getAttribute(User.class) != null) {
+            UI.getCurrent().getPage().setLocation("login");
+            session.close();
+        }
+
 
         VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalLayout horizontalLayout = new HorizontalLayout();
