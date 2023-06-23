@@ -2,9 +2,7 @@ package com.example.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 
 public class AdminEditForm extends EditForm {
     private Button edit;
@@ -15,14 +13,12 @@ public class AdminEditForm extends EditForm {
         addClassName("admin-edit-form");
         edit = new Button("Edit");
 
-
-        addAdminButton =  new Button("Make admin");
+        addAdminButton = new Button("Make admin");
         refreshPassword = new Button("Reset password");
 
         setStyles();
 
-
-        getUserForm().getVerticalLayout().add(addAdminButton,refreshPassword);
+        getUserForm().getVerticalLayout().add(addAdminButton, refreshPassword);
         add(getUserForm());
     }
 
@@ -31,7 +27,6 @@ public class AdminEditForm extends EditForm {
                 ButtonVariant.LUMO_SMALL);
         addAdminButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_SUCCESS);
-
 
         getUserForm().getUsernameTextField().getStyle().setWidth("100%");
         getUserForm().getEmailTextField().getStyle().setWidth("100%");

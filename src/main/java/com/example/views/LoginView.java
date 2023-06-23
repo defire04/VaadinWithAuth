@@ -2,6 +2,7 @@ package com.example.views;
 
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
+import com.example.exeption.LoginFormException;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -21,7 +22,7 @@ import com.vaadin.flow.server.WrappedSession;
 public class LoginView extends Div {
 
     public LoginView(UserService authService) {
-
+        addClassName("login-view");
         UI.getCurrent().getElement().getThemeList().add("dark");
 
 
@@ -41,7 +42,7 @@ public class LoginView extends Div {
             try {
                 authService.login(event.getUsername(), event.getPassword());
                 UI.getCurrent().navigate("home");
-            } catch (RuntimeException e) {
+            } catch (LoginFormException e) {
                 loginForm.setError(true);
 //                Notification.show(e.getMessage());
             }

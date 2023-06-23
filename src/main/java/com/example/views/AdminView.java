@@ -11,13 +11,12 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.dom.Style;
+
 
 
 public class AdminView extends VerticalLayout {
 
     public AdminView(UserService userService, UserEditor userEditor) {
-
         addClassName("list-view");
         setSizeFull();
 
@@ -25,21 +24,17 @@ public class AdminView extends VerticalLayout {
         Grid<User> grid = new Grid<>(User.class);
         grid.setAllRowsVisible(true);
 
-        grid.setColumns("username", "name", "email", "roles", "password");
+        grid.setColumns("username", "name", "email", "role", "password");
 
         grid.setItems(userService.getAll());
 
         Button addNewBtn = new Button("Add new");
         HorizontalLayout toolBar = new HorizontalLayout(addNewBtn);
-//        grid.setHeight("300px");
-
 
 
         Div content = new Div(grid, userEditor);
         content.addClassName("content");
         content.setSizeFull();
-
-
 
         add(toolBar,  content);
 

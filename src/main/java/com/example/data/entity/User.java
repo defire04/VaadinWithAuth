@@ -23,10 +23,11 @@ public class User {
     private String password;
     @Column(name="name")
     private String name;
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "username"))
     @Enumerated(EnumType.STRING)
-    private final Set<Role> roles = new HashSet<>(Collections.singletonList(Role.USER));
+    private  Role role = Role.USER;
+//    private final Set<Role> roles = new HashSet<>(Collections.singletonList(Role.USER));
     @Column(name = "email", nullable = false)
     @Email
     @NotEmpty(message = "Email should be not empty!")
@@ -68,13 +69,13 @@ public class User {
         this.name = name;
     }
 
-    public void addRole(Role newRole) {
-        roles.add(newRole);
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
+//    public void addRole(Role newRole) {
+//        roles.add(newRole);
+//    }
+//
+//    public Set<Role> getRoles() {
+//        return roles;
+//    }
 
     public String getEmail() {
         return email;
@@ -84,11 +85,11 @@ public class User {
         this.email = email;
     }
 
-//    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = "ROLE_" + role;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

@@ -42,8 +42,8 @@ public class UserService {
 
         if (passwordService.matches(password, user.getPassword())) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
-            createRoutes(user.getRoles());
-        } else{
+            createRoutes(user.getRole());
+        } else {
             throw new InvalidPasswordException("Password does not match ");
         }
     }
@@ -70,32 +70,31 @@ public class UserService {
         }
     }
 
-    private void createRoutes(Set<Role> roles) {
-        getAuthorizedRoutes(roles)
+    private void createRoutes(Role role) {
+        getAuthorizedRoutes(role)
                 .forEach(route -> RouteConfiguration.forSessionScope().setRoute(route.route, route.view));
 
     }
 
-    public Set<AuthorizedRoute> getAuthorizedRoutes(Set<Role> roles) {
+    public Set<AuthorizedRoute> getAuthorizedRoutes(Role role) {
         Set<AuthorizedRoute> routes = new HashSet<>();
 
-        roles.forEach(role -> {
-            switch (role) {
-                case ADMIN:
-                    routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
-                case USER:
-                    routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
-                case BLOCKED:
-                    routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
-            }
-        });
+        switch (role) {
+            case ADMIN:
+                routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
+            case USER:
+                routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
+            case BLOCKED:
+                routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
+        }
+
         return routes;
     }
 
     public void addAdminRights(User editedUser) {
         Optional<User> user = findByUsername(editedUser.getUsername());
         if (user.isPresent()) {
-            user.get().addRole(Role.ADMIN);
+            user.get().setRole(Role.ADMIN);
             userRepository.save(user.get());
         }
     }
