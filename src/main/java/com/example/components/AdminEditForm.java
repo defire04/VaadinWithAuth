@@ -2,9 +2,8 @@ package com.example.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.dom.Style;
+import com.vaadin.flow.component.html.Span;
+
 
 
 public class AdminEditForm extends EditForm {
@@ -12,10 +11,7 @@ public class AdminEditForm extends EditForm {
     private Button addAdminButton;
     private Button refreshPassword;
     private Button block;
-    private final VerticalLayout verticalLayout;
-
-    private final HorizontalLayout adminButtons;
-    private final HorizontalLayout editButtons;
+    private Span errorMessageField;
 
 
     public AdminEditForm() {
@@ -25,60 +21,30 @@ public class AdminEditForm extends EditForm {
         addAdminButton = new Button("Make admin");
         refreshPassword = new Button("Reset password");
         block = new Button("Block");
-
-
-        adminButtons = new HorizontalLayout(addAdminButton, refreshPassword, block);
-        adminButtons.addClassName("admin-buttons");
-        editButtons = new HorizontalLayout(getSave(), getDelete(), getCancel());
-        editButtons.addClassName("edit-buttons");
-
-        verticalLayout = new VerticalLayout(getUserForm(),
-                adminButtons,
-                editButtons);
-
+        errorMessageField = new Span();
 
         setStyles();
-        add(verticalLayout);
+        add(getUserForm().getUsernameTextField(),  getUserForm().getNameTextField(), getUserForm().getEmailTextField(),
+                edit, addAdminButton, refreshPassword, block, getSave(), getDelete(), getCancel());
     }
 
     private void setStyles() {
+        getStyle().setMargin("0 auto");
         refreshPassword.addThemeVariants(ButtonVariant.LUMO_ERROR,
                 ButtonVariant.LUMO_ERROR);
         addAdminButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY,
                 ButtonVariant.LUMO_SUCCESS);
 
-        getStyle().setDisplay(Style.Display.FLEX)
-                .set("justify-content", "center");
 
-        getUserForm().getUsernameTextField().getStyle().setWidth("100%");
-        getUserForm().getEmailTextField().getStyle().setWidth("100%");
-        getUserForm().getNameTextField().getStyle().setWidth("100%");
+        setMaxWidth("470px");
+        setResponsiveSteps(
+                new ResponsiveStep("0", 3),
+                new ResponsiveStep("470px", 3, ResponsiveStep.LabelsPosition.TOP));
 
-        adminButtons.getStyle()
-                .setDisplay(Style.Display.FLEX)
-                .setWidth("100%")
-                .set("align-items", "baseline")
-                .set("justify-content", "space-around")
-        ;
-
-        addAdminButton.getStyle().set("flex", "1 0 30%");
-        refreshPassword.getStyle().set("flex", "1 0 30%");
-        block.getStyle().set("flex", "1 0 30%");
-
-        editButtons.getStyle()
-                .setDisplay(Style.Display.FLEX)
-                .setWidth("100%")
-                .set("align-items", "baseline")
-                .set("justify-content", "space-around")
-        ;
-
-        getSave().getStyle().set("flex", "1 0 30%");
-        getDelete().getStyle().set("flex", "1 0 30%");
-        getCancel().getStyle().set("flex", "1 0 30%");
-
-
-
-
+        setColspan(getUserForm().getUsernameTextField(), 3);
+        setColspan(getUserForm().getNameTextField(), 3);
+        setColspan(getUserForm().getEmailTextField(), 3);
+        setColspan(errorMessageField, 2);
 
         edit.setVisible(false);
     }
@@ -114,5 +80,12 @@ public class AdminEditForm extends EditForm {
 
     public void setBlock(Button block) {
         this.block = block;
+    }
+
+    public Span getErrorMessageField() {
+        return errorMessageField;
+    }
+    public void setErrorMessageField(Span errorMessageField) {
+        this.errorMessageField = errorMessageField;
     }
 }

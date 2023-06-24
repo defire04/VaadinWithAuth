@@ -15,8 +15,9 @@ public class RegistrationForm extends FormLayout {
     private PasswordField passwordConfirm;
     private Button register;
     private Span errorMessageField;
-
     private Button loginLink;
+
+//    private Button registrationConfirmationButton;
 
 
     public RegistrationForm() {

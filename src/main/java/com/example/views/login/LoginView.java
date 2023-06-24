@@ -1,4 +1,4 @@
-package com.example.views;
+package com.example.views.login;
 
 import com.example.components.LoginFormMy;
 import com.example.components.NotificationWarning;

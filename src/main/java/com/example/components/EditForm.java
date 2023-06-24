@@ -6,16 +6,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 
 public class EditForm extends FormLayout {
     private UserForm userForm;
     private Button save;
     private Button cancel;
     private Button delete;
-
-
 
     public EditForm() {
         addClassName("edit-form");

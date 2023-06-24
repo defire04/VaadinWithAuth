@@ -1,6 +1,7 @@
-package com.example.components;
+package com.example.views.admin;
 
 
+import com.example.components.AdminEditForm;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
@@ -13,22 +14,25 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 @SpringComponent
 @UIScope
-public class UserEditor extends VerticalLayout implements KeyNotifier {
-
+public class AdminUserEditor extends VerticalLayout implements KeyNotifier {
     private final UserService userService;
     private User user;
     private final Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
 
+
     public interface ChangeHandler {
         void onChange();
     }
 
-    public UserEditor(UserService userService) {
+    public AdminUserEditor(UserService userService) {
         this.userService = userService;
 
-        AdminEditForm adminEditForm = new AdminEditForm();
-        adminEditForm.getStyle().setMargin("0 auto");
+    }
+
+    public void setAdminUserEditForm(AdminEditForm adminEditForm){
+
+//        adminEditForm.getStyle().setMargin("0 auto");
 
         add(adminEditForm);
 
@@ -46,6 +50,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         setVisible(false);
 
     }
+
     private void blockUser(User user){
         userService.updateUserRole(user, Role.BLOCKED);
         changeHandler.onChange();
@@ -61,17 +66,17 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         changeHandler.onChange();
     }
 
-    public void delete() {
+    private void delete() {
         userService.delete(user);
         changeHandler.onChange();
     }
 
-    public void saveOrUpdateUserViaAdmin() {
+    private void saveOrUpdateUserViaAdmin() {
         userService.saveOrUpdateUserViaAdmin(user);
         changeHandler.onChange();
     }
 
-    public void cancel() {
+    private void cancel() {
         changeHandler.onChange();
     }
 

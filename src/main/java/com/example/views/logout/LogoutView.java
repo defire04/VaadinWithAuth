@@ -1,4 +1,4 @@
-package com.example.views;
+package com.example.views.logout;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;

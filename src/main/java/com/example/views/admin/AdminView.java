@@ -1,7 +1,7 @@
-package com.example.views;
+package com.example.views.admin;
 
 
-import com.example.components.UserEditor;
+import com.example.components.AdminEditForm;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
 
@@ -13,39 +13,43 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
-
 public class AdminView extends VerticalLayout {
 
-    public AdminView(UserService userService, UserEditor userEditor) {
+    public AdminView(UserService userService, AdminUserEditor adminUserEditor) {
         addClassName("list-view");
         setSizeFull();
-
 
         Grid<User> grid = new Grid<>(User.class);
         grid.setAllRowsVisible(true);
 
         grid.setColumns("username", "name", "email", "role", "password");
-
         grid.setItems(userService.getAll());
 
         Button addNewBtn = new Button("Add new");
         HorizontalLayout toolBar = new HorizontalLayout(addNewBtn);
 
-
-        Div content = new Div(grid, userEditor);
+        Div content = new Div(grid, adminUserEditor);
         content.addClassName("content");
         content.setSizeFull();
 
-        add(toolBar,  content);
+        add(toolBar, content);
 
         grid.asSingleSelect().addValueChangeListener(e -> {
-            userEditor.editUser(e.getValue());
+            adminUserEditor.editUser(e.getValue());
         });
 
-        addNewBtn.addClickListener(e -> userEditor.editUser(new User()));
+        AdminEditForm adminEditForm = new AdminEditForm();
+        adminUserEditor.setAdminUserEditForm(adminEditForm);
 
-        userEditor.setChangeHandler(() -> {
-            userEditor.setVisible(false);
+        AdminEditFormBinder adminEditFormBinder = new AdminEditFormBinder(adminEditForm);
+        adminEditFormBinder.addBindingAndValidation();
+
+        addNewBtn.addClickListener(e -> {
+            adminUserEditor.editUser(new User());
+        });
+
+        adminUserEditor.setChangeHandler(() -> {
+            adminUserEditor.setVisible(false);
             grid.setItems(userService.getAll());
         });
     }
