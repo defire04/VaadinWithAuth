@@ -44,17 +44,21 @@ public class UserService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
 
         if (passwordService.matches(password, user.getPassword())) {
-
             VaadinSession.getCurrent().setAttribute(User.class, user);
             usersSession.put(username, VaadinSession.getCurrent());
             createRoutes(user.getRole());
+        } else if (user.getTempPassword() != null && passwordService.matches(password, user.getTempPassword())) {
+            VaadinSession.getCurrent().setAttribute(User.class, user);
+            usersSession.put(username, VaadinSession.getCurrent());
+            createRoutes(Role.MUST_CHANGE_PASSWORD);
+            user.setRole(Role.MUST_CHANGE_PASSWORD);
+            userRepository.save(user);
         } else {
             throw new InvalidPasswordException("Password does not match!");
         }
     }
 
     public void register(User entity) {
-
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);
@@ -64,6 +68,8 @@ public class UserService {
     }
 
     public void delete(User user) {
+        logOutUserSession(user.getUsername());
+        usersSession.remove(user.getUsername());
         userRepository.delete(user);
     }
 
@@ -91,6 +97,8 @@ public class UserService {
                 routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
             case USER:
                 routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
+            case MUST_CHANGE_PASSWORD:
+
             case BLOCKED:
                 routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
         }
@@ -98,29 +106,41 @@ public class UserService {
         return routes;
     }
 
-    public void updateUserRole(User updatedUser, Role newRole){
+    public void updateUserRole(User updatedUser, Role newRole) {
         Optional<User> user = findByUsername(updatedUser.getUsername());
         if (user.isPresent()) {
             user.get().setRole(newRole);
             userRepository.save(user.get());
-            VaadinSession session = usersSession.get(updatedUser.getUsername());
-
-            session.getSession().invalidate();
-            session.close();
+            logOutUserSession(updatedUser.getUsername());
         }
     }
 
-    public void refreshPassword(User editedUser) {
+    public void resetPassword(User editedUser) {
         Optional<User> user = findByUsername(editedUser.getUsername());
         if (user.isPresent()) {
             String newPassword = passwordService.generateRandomPassword();
             user.get().setPassword(passwordService.hashPassword(newPassword));
             emailSenderService.sendEmail(user.get().getEmail(), newPassword);
-
             userRepository.save(user.get());
+            logOutUserSession(editedUser.getUsername());
         }
     }
 
+    private void logOutUserSession(String username) {
+        VaadinSession session = usersSession.get(username);
+        session.getSession().invalidate();
+    }
+
+    public void sendTempPassword(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        String tempPassword = passwordService.generateRandomPassword();
+        user.setTempPassword(passwordService.hashPassword(tempPassword));
+
+        emailSenderService.sendEmail(user.getEmail(), tempPassword);
+
+        userRepository.save(user);
+
+    }
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {
     }

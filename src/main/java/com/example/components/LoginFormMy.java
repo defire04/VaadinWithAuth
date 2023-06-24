@@ -51,7 +51,6 @@ public class LoginFormMy extends FormLayout {
         register.getStyle()
                 .setDisplay(Style.Display.FLEX)
                 .setWidth("100%")
-
                 .set("justify-content", "center")
         ;
     }

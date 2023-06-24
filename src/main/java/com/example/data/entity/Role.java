@@ -1,7 +1,9 @@
 package com.example.data.entity;
 
 public enum Role {
-    USER,
     ADMIN,
-    BLOCKED
+    USER,
+    MUST_CHANGE_PASSWORD,
+    BLOCKED,
+
 }

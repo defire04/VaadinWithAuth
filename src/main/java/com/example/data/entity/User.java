@@ -6,10 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "application_user")
 public class User {
@@ -24,13 +20,14 @@ public class User {
     @Column(name="name")
     private String name;
 
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "username"))
     @Enumerated(EnumType.STRING)
     private  Role role = Role.USER;
     @Column(name = "email", nullable = false)
     @Email
     @NotEmpty(message = "Email should be not empty!")
     private String email;
+    @Column(name="temp-password")
+    private String tempPassword;
 
     public User(String username, String password, String name, String email) {
         this.username = username;
@@ -68,14 +65,6 @@ public class User {
         this.name = name;
     }
 
-//    public void addRole(Role newRole) {
-//        roles.add(newRole);
-//    }
-//
-//    public Set<Role> getRoles() {
-//        return roles;
-//    }
-
     public String getEmail() {
         return email;
     }
@@ -90,5 +79,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getTempPassword() {
+        return tempPassword;
+    }
+
+    public void setTempPassword(String tempPassword) {
+        this.tempPassword = tempPassword;
     }
 }
