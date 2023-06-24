@@ -63,6 +63,10 @@ public class UserService {
     }
 
     public void register(User entity) {
+        if(entity.getPassword().isEmpty()){
+            throw new InvalidPasswordException("User already exists!");
+        }
+
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);

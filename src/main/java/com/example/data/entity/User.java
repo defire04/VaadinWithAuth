@@ -11,22 +11,24 @@ import jakarta.validation.constraints.Size;
 public class User {
     @Id
     @Column(name = "username", nullable = false, unique = true)
+    @NotEmpty(message = "Username should be not empty!")
     private String username;
 
-    @Column(name="password")
+    @Column(name = "password")
     @NotEmpty(message = "Password should be not empty!")
     @Size(min = 8, message = "Password must be more than 8 characters!")
     private String password;
-    @Column(name="name")
+    @Column(name = "name")
+    @NotEmpty(message = "Name should be not empty!")
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private  Role role = Role.USER;
+    private Role role = Role.USER;
     @Column(name = "email", nullable = false)
     @Email
     @NotEmpty(message = "Email should be not empty!")
     private String email;
-    @Column(name="temp-password")
+    @Column(name = "temp-password")
     private String tempPassword;
 
     public User(String username, String password, String name, String email) {

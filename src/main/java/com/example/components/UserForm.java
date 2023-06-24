@@ -10,15 +10,15 @@ public class UserForm extends Div {
     private TextField username;
     private TextField name;
     private EmailField email;
-    private  VerticalLayout verticalLayout;
+
 
     public UserForm() {
         addClassName("user-form");
         username = new TextField("Username");
         name = new TextField("Name");
         email = new EmailField("Email");
-        verticalLayout= new VerticalLayout(username, name, email);
-        add(verticalLayout);
+//        verticalLayout= new VerticalLayout(username, name, email);
+        add(username, name, email);
     }
 
     public TextField getUsernameTextField() {
@@ -46,11 +46,5 @@ public class UserForm extends Div {
     }
 
 
-    public VerticalLayout getVerticalLayout() {
-        return verticalLayout;
-    }
 
-    public void setVerticalLayout(VerticalLayout verticalLayout) {
-        this.verticalLayout = verticalLayout;
-    }
 }

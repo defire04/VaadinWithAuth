@@ -7,13 +7,14 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class EditForm extends FormLayout {
     private UserForm userForm;
     private Button save;
     private Button cancel;
     private Button delete;
-    private HorizontalLayout  horizonActions;
+
 
 
     public EditForm() {
@@ -23,22 +24,18 @@ public class EditForm extends FormLayout {
         cancel = new Button("Cancel");
         delete = new Button("Delete", VaadinIcon.TRASH.create());
 
+        setStyles();
 
-        horizonActions = createButtonsHorizontalLayout();
-        userForm.getVerticalLayout().add(horizonActions);
-        add(userForm, userForm.getVerticalLayout());
+        add(userForm, save, cancel, delete);
     }
 
-    private HorizontalLayout createButtonsHorizontalLayout() {
-        addClassName("default-edit-button");
+    private void setStyles(){
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
-
-        return new HorizontalLayout(save, cancel, delete);
     }
+
 
     public UserForm getUserForm() {
         return userForm;
@@ -72,12 +69,4 @@ public class EditForm extends FormLayout {
         this.delete = delete;
     }
 
-
-    public HorizontalLayout getActions() {
-        return horizonActions;
-    }
-
-    public void setActions(HorizontalLayout actions) {
-        this.horizonActions = actions;
-    }
 }

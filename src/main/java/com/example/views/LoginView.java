@@ -58,21 +58,23 @@ public class LoginView extends Div {
                 loginForm.setForgotPasswordButtonVisible(true);
 //                Notification.show(e.getMessage());
 
-                loginForm.addForgotPasswordListener(forgotPasswordEvent -> {
-                    try {
-                        Div text = new Div(
-                                new Text("We have sent a temporary password to your email."),
-                                new HtmlComponent("br"),
-                                new Text("You can login using this password")
-                        );
-                        new NotificationWarning(text).show();
-                        authService.sendTempPassword(event.getUsername());
-                    } catch (UserNotFoundException userNotFoundException) {
-                        Notification.show(userNotFoundException.getMessage())
-                                .addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    }
-                });
             }
+
+            loginForm.addForgotPasswordListener(forgotPasswordEvent -> {
+                try {
+                    authService.sendTempPassword(event.getUsername());
+                    Div text = new Div(
+                            new Text("We have sent a temporary password to your email."),
+                            new HtmlComponent("br"),
+                            new Text("You can login using this password")
+                    );
+                    new NotificationWarning(text).show();
+
+                } catch (UserNotFoundException userNotFoundException) {
+                    Notification.show(userNotFoundException.getMessage())
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            });
         });
 
 
