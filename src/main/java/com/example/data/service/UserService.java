@@ -40,8 +40,12 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public User findByUsernameOrElseThrowUserNotFoundException(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
+    }
+
     public void login(String username, String password) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        User user = findByUsernameOrElseThrowUserNotFoundException(username);
 
         if (passwordService.matches(password, user.getPassword())) {
             VaadinSession.getCurrent().setAttribute(User.class, user);
@@ -107,37 +111,41 @@ public class UserService {
     }
 
     public void updateUserRole(User updatedUser, Role newRole) {
-        Optional<User> user = findByUsername(updatedUser.getUsername());
-        if (user.isPresent()) {
-            user.get().setRole(newRole);
-            userRepository.save(user.get());
-            logOutUserSession(updatedUser.getUsername());
-        }
+        User user = findByUsernameOrElseThrowUserNotFoundException(updatedUser.getUsername());
+
+        user.setRole(newRole);
+        userRepository.save(user);
+        logOutUserSession(updatedUser.getUsername());
+
     }
 
     public void resetPassword(User editedUser) {
-        Optional<User> user = findByUsername(editedUser.getUsername());
-        if (user.isPresent()) {
-            String newPassword = passwordService.generateRandomPassword();
-            user.get().setPassword(passwordService.hashPassword(newPassword));
-            emailSenderService.sendEmail(user.get().getEmail(), newPassword);
-            userRepository.save(user.get());
-            logOutUserSession(editedUser.getUsername());
-        }
+        User user = findByUsernameOrElseThrowUserNotFoundException(editedUser.getUsername());
+
+        String newPassword = passwordService.generateRandomPassword();
+        user.setTempPassword(passwordService.hashPassword(newPassword));
+
+        emailSenderService.sendEmail(user.getEmail(), newPassword);
+        userRepository.save(user);
+
+        logOutUserSession(editedUser.getUsername());
+
     }
 
     private void logOutUserSession(String username) {
         VaadinSession session = usersSession.get(username);
-        session.getSession().invalidate();
+        if (session != null) {
+            session.getSession().invalidate();
+        }
     }
 
     public void sendTempPassword(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        User user = findByUsernameOrElseThrowUserNotFoundException(username);
+
         String tempPassword = passwordService.generateRandomPassword();
         user.setTempPassword(passwordService.hashPassword(tempPassword));
 
         emailSenderService.sendEmail(user.getEmail(), tempPassword);
-
         userRepository.save(user);
 
     }
