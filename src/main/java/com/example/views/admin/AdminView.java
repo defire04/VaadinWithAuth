@@ -22,7 +22,7 @@ public class AdminView extends VerticalLayout {
         Grid<User> grid = new Grid<>(User.class);
         grid.setAllRowsVisible(true);
 
-        grid.setColumns("username", "name", "email", "role", "password");
+        grid.setColumns("username", "name", "email", "role", "password", "mustChangePassword");
         grid.setItems(userService.getAll());
 
         Button addNewBtn = new Button("Add new");

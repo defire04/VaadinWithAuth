@@ -15,7 +15,6 @@ public class User {
     private String username;
 
     @Column(name = "password")
-    @NotEmpty(message = "Password should be not empty!")
     @Size(min = 8, message = "Password must be more than 8 characters!")
     private String password;
     @Column(name = "name")
@@ -31,6 +30,9 @@ public class User {
     @Column(name = "temp-password")
     private String tempPassword;
 
+    @Column(name = "must-change-password")
+    private boolean mustChangePassword = false;
+
     public User(String username, String password, String name, String email) {
         this.username = username;
         this.password = password;
@@ -38,6 +40,8 @@ public class User {
         this.email = email;
 
     }
+
+
 
     public User() {
 
@@ -89,5 +93,13 @@ public class User {
 
     public void setTempPassword(String tempPassword) {
         this.tempPassword = tempPassword;
+    }
+
+    public boolean isMustChangePassword() {
+        return mustChangePassword;
+    }
+
+    public void setMustChangePassword(boolean mustChangePassword) {
+        this.mustChangePassword = mustChangePassword;
     }
 }

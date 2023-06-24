@@ -1,9 +1,6 @@
 package com.example.components;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
-
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -18,7 +15,6 @@ public class UserForm extends FormLayout {
         username = new TextField("Username");
         name = new TextField("Name");
         email = new EmailField("Email");
-//        verticalLayout= new VerticalLayout(username, name, email);
         add(username, name, email);
     }
 

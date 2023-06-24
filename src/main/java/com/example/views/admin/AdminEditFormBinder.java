@@ -27,8 +27,6 @@ public class AdminEditFormBinder {
                 User userBean = new User();
                 binder.writeBean(userBean);
 
-
-
                 showSuccess();
             } catch (ValidationException exception) {
                 Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);

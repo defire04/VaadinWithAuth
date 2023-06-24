@@ -14,6 +14,8 @@ public class EditForm extends FormLayout {
     private Button cancel;
     private Button delete;
 
+
+
     public EditForm() {
         addClassName("edit-form");
         userForm = new UserForm();

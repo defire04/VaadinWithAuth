@@ -9,6 +9,7 @@ import com.example.data.exeption.UserAlreadyExists;
 import com.example.data.exeption.UserNotFoundException;
 import com.example.views.admin.AdminView;
 import com.example.views.logout.LogoutView;
+import com.example.views.reset_password.ResetPasswordView;
 import com.example.views.user.EditUserView;
 import com.example.views.user.UserView;
 import com.vaadin.flow.component.Component;
@@ -49,23 +50,25 @@ public class UserService {
     public void login(String username, String password) {
         User user = findByUsernameOrElseThrowUserNotFoundException(username);
 
-        if (passwordService.matches(password, user.getPassword())) {
+        boolean isPasswordMatch = passwordService.matches(password, user.getPassword());
+        boolean isTempPasswordMatch = user.getTempPassword() != null && passwordService.matches(password, user.getTempPassword());
+
+        if (isPasswordMatch || isTempPasswordMatch) {
+            if (isTempPasswordMatch) {
+                user.setMustChangePassword(true);
+                userRepository.save(user);
+            }
+
             VaadinSession.getCurrent().setAttribute(User.class, user);
             usersSession.put(username, VaadinSession.getCurrent());
-            createRoutes(user.getRole());
-        } else if (user.getTempPassword() != null && passwordService.matches(password, user.getTempPassword())) {
-            VaadinSession.getCurrent().setAttribute(User.class, user);
-            usersSession.put(username, VaadinSession.getCurrent());
-            createRoutes(Role.MUST_CHANGE_PASSWORD);
-            user.setRole(Role.MUST_CHANGE_PASSWORD);
-            userRepository.save(user);
+            createRoutes(user);
         } else {
             throw new InvalidPasswordException("Password does not match!");
         }
     }
 
     public void register(User entity) {
-        if(entity.getPassword().isEmpty()){
+        if (entity.getPassword().isEmpty()) {
             throw new InvalidPasswordException("User already exists!");
         }
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
@@ -85,16 +88,27 @@ public class UserService {
     public void saveOrUpdateUserViaAdmin(User user) {
         if (findByUsername(user.getUsername()).isEmpty()) {
             String newPassword = passwordService.generateRandomPassword();
+
+            user.setMustChangePassword(true);
+            user.setTempPassword(passwordService.hashPassword(newPassword));
+
+            userRepository.save(user);
+
+
             emailSenderService.sendEmail(user.getEmail(), newPassword);
-            userRepository.save(new User(user.getUsername(), passwordService.hashPassword(newPassword),
-                    user.getName(), user.getEmail()));
         } else {
             userRepository.save(user);
         }
     }
 
-    private void createRoutes(Role role) {
-        getAuthorizedRoutes(role)
+    private void createRoutes(User user) {
+        if (user.isMustChangePassword()) {
+            RouteConfiguration.forSessionScope().setRoute("reset-password", ResetPasswordView.class);
+            return;
+        }
+
+        getAuthorizedRoutes(user.getRole()).stream()
+                .filter(route -> !RouteConfiguration.forSessionScope().isRouteRegistered(route.view))
                 .forEach(route -> RouteConfiguration.forSessionScope().setRoute(route.route, route.view));
     }
 
@@ -107,7 +121,7 @@ public class UserService {
             case USER:
                 routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
                 routes.add(new AuthorizedRoute("edit", "EditUserView", EditUserView.class));
-            case MUST_CHANGE_PASSWORD:
+                routes.add(new AuthorizedRoute("reset-password", "ResetPasswordView", ResetPasswordView.class));
 
             case BLOCKED:
                 routes.add(new AuthorizedRoute("logout", "Logout", LogoutView.class));
@@ -147,7 +161,7 @@ public class UserService {
 
     public void sendTempPassword(String username) {
         User user = findByUsernameOrElseThrowUserNotFoundException(username);
-
+        user.setMustChangePassword(true);
         String tempPassword = passwordService.generateRandomPassword();
         user.setTempPassword(passwordService.hashPassword(tempPassword));
 
@@ -155,10 +169,12 @@ public class UserService {
         userRepository.save(user);
 
     }
-    public void update(String username, User updatedUser){
+
+    public void update(String username, User updatedUser) {
         User user = findByUsernameOrElseThrowUserNotFoundException(username);
 
         Field[] fields = User.class.getDeclaredFields();
+
 
         for (Field field : fields) {
             field.setAccessible(true);
@@ -172,7 +188,24 @@ public class UserService {
                 throw new RuntimeException("Handling an exception when accessing a field");
             }
         }
+
+
         userRepository.save(user);
+    }
+
+    public void updatePassword(String username, User updatedUser) {
+        User user = findByUsernameOrElseThrowUserNotFoundException(username);
+
+        if (user.getTempPassword() != null && !user.getTempPassword().isEmpty() && user.isMustChangePassword()) {
+            user.setTempPassword(null);
+            user.setMustChangePassword(false);
+        }
+
+        user.setPassword(passwordService.hashPassword(updatedUser.getPassword()));
+        createRoutes(user);
+
+        userRepository.save(user);
+
     }
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {

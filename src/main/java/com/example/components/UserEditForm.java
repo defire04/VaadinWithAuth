@@ -41,7 +41,6 @@ public class UserEditForm extends FormLayout {
 
     private void setStyles() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
         getStyle().setMargin("0 auto");

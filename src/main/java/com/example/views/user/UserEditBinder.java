@@ -4,6 +4,7 @@ package com.example.views.user;
 import com.example.components.UserEditForm;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
+import com.example.views.reset_password.ResetPasswordView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -52,7 +53,7 @@ public class UserEditBinder {
         });
 
         userEditForm.getChangePasswordButton().addClickListener(event -> {
-
+            UI.getCurrent().navigate(ResetPasswordView.class);
         });
 
         userEditForm.getCancel().addClickListener(event -> {
