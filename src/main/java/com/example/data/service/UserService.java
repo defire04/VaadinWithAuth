@@ -4,17 +4,19 @@ package com.example.data.service;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.repository.UserRepository;
-import com.example.exeption.InvalidPasswordException;
-import com.example.exeption.UserAlreadyExists;
-import com.example.exeption.UserNotFoundException;
+import com.example.data.exeption.InvalidPasswordException;
+import com.example.data.exeption.UserAlreadyExists;
+import com.example.data.exeption.UserNotFoundException;
 import com.example.views.admin.AdminView;
 import com.example.views.logout.LogoutView;
+import com.example.views.user.EditUserView;
 import com.example.views.user.UserView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
@@ -66,7 +68,6 @@ public class UserService {
         if(entity.getPassword().isEmpty()){
             throw new InvalidPasswordException("User already exists!");
         }
-
         if (userRepository.findByUsername(entity.getUsername()).isEmpty()) {
             entity.setPassword(passwordService.hashPassword(entity.getPassword()));
             userRepository.save(entity);
@@ -105,6 +106,7 @@ public class UserService {
                 routes.add(new AuthorizedRoute("admin", "Admin", AdminView.class));
             case USER:
                 routes.add(new AuthorizedRoute("user", "UserView", UserView.class));
+                routes.add(new AuthorizedRoute("edit", "EditUserView", EditUserView.class));
             case MUST_CHANGE_PASSWORD:
 
             case BLOCKED:
@@ -152,6 +154,25 @@ public class UserService {
         emailSenderService.sendEmail(user.getEmail(), tempPassword);
         userRepository.save(user);
 
+    }
+    public void update(String username, User updatedUser){
+        User user = findByUsernameOrElseThrowUserNotFoundException(username);
+
+        Field[] fields = User.class.getDeclaredFields();
+
+        for (Field field : fields) {
+            field.setAccessible(true);
+
+            try {
+                Object updatedValue = field.get(updatedUser);
+                if (updatedValue != null && !String.valueOf(updatedValue).isEmpty()) {
+                    field.set(user, updatedValue);
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Handling an exception when accessing a field");
+            }
+        }
+        userRepository.save(user);
     }
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {

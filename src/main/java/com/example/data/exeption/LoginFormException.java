@@ -1,4 +1,4 @@
-package com.example.exeption;
+package com.example.data.exeption;
 
 public class LoginFormException extends RuntimeException{
     public LoginFormException(String message) {

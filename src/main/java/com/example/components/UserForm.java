@@ -1,12 +1,13 @@
 package com.example.components;
 
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class UserForm extends Div {
+public class UserForm extends FormLayout {
     private TextField username;
     private TextField name;
     private EmailField email;
