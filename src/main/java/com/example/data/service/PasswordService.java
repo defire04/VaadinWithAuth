@@ -6,19 +6,14 @@ import java.util.Random;
 
 @Service
 public class PasswordService {
-
     private static final int PASSWORD_CONFIRMATION_LENGTH = 4;
     private static final int PASSWORD_LENGTH = 8;
-
     private static final String DIGITS = "0123456789";
     private static final String DIGITS_AND_LETTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
     private final BCryptPasswordEncoder passwordEncoder;
-
     public PasswordService() {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
-
     public String generateRandomConfirmationPassword() {
         Random random = new Random();
         StringBuilder password = new StringBuilder();
@@ -29,7 +24,6 @@ public class PasswordService {
         }
         return password.toString();
     }
-
     public String generateRandomPassword() {
         Random random = new Random();
         StringBuilder password = new StringBuilder();

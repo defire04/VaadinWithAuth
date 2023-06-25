@@ -7,12 +7,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSenderService {
-
     private final JavaMailSender javaMailSender;
-
     @Value("${spring.mail.username}")
     private String fromEmail;
-
     public EmailSenderService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
@@ -24,8 +21,6 @@ public class EmailSenderService {
         message.setSubject("No reply");
         message.setText(body);
 
-
         javaMailSender.send(message);
-
     }
 }

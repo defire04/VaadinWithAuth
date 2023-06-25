@@ -15,7 +15,6 @@ public class LoginFormMy extends FormLayout {
     private HorizontalLayout horizontalLayout;
     private Button register;
     private Div loginContainer;
-
     public LoginFormMy() {
         loginForm = new LoginForm();
         verticalLayout = new VerticalLayout();
@@ -34,7 +33,6 @@ public class LoginFormMy extends FormLayout {
         setStyles();
         add(loginContainer);
     }
-
     public void setStyles() {
         loginForm.getStyle().clear()
                 .setDisplay(Style.Display.FLEX)
@@ -50,7 +48,6 @@ public class LoginFormMy extends FormLayout {
                 .set("justify-content", "center")
         ;
     }
-
     public LoginForm getLoginForm() {
         return loginForm;
     }

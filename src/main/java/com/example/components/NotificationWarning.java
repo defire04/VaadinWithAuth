@@ -11,20 +11,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 
 public class NotificationWarning extends Div {
-
     private Div message;
-
     public NotificationWarning(Div message) {
         this.message = message;
     }
-
     public Notification show() {
-
         Notification notification = new Notification();
         notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
 
         Div text = message;
-
 
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);

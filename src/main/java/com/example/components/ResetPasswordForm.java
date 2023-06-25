@@ -36,47 +36,35 @@ public class ResetPasswordForm extends FormLayout {
         setResponsiveSteps(
                 new ResponsiveStep("0", 1, ResponsiveStep.LabelsPosition.TOP),
                 new ResponsiveStep("500px", 2, ResponsiveStep.LabelsPosition.TOP));
-
-
-
     }
 
     public PasswordField getPassword() {
         return password;
     }
-
     public void setPassword(PasswordField password) {
         this.password = password;
     }
-
     public PasswordField getPasswordConfirm() {
         return passwordConfirm;
     }
-
     public void setPasswordConfirm(PasswordField passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
-
     public Button getSave() {
         return save;
     }
-
     public void setSave(Button save) {
         this.save = save;
     }
-
     public Button getCancel() {
         return cancel;
     }
-
     public void setCancel(Button cancel) {
         this.cancel = cancel;
     }
-
     public Span getErrorMessageField() {
         return errorMessageField;
     }
-
     public void setErrorMessageField(Span errorMessageField) {
         this.errorMessageField = errorMessageField;
     }

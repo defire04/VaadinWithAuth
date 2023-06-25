@@ -30,12 +30,10 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
 
     public AdminFormEditor(UserService userService) {
         this.userService = userService;
-
     }
 
     public AdminFormEditor setAdminUserEditForm(AdminEditForm adminEditForm){
         this.adminEditForm = adminEditForm;
-//        adminEditForm.getStyle().setMargin("0 auto");
 
         add(adminEditForm);
 
@@ -102,7 +100,7 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
     }
 
 
-    public void addBindingAndValidation() {
+    public AdminFormEditor addBindingAndValidation() {
         binder.bindInstanceFields(adminEditForm);
 
         binder.setStatusLabel(adminEditForm.getErrorMessageField());
@@ -117,12 +115,12 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
                 Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
+        return this;
     }
     private void showSuccess() {
         Notification notification =
                 Notification.show("Data saved");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
     }
 }
 

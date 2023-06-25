@@ -1,13 +1,9 @@
 package com.example.components;
 
-
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.router.RouteConfiguration;
-
-import java.util.List;
 
 public class NavigationBar extends Div {
     public NavigationBar() {
@@ -20,7 +16,7 @@ public class NavigationBar extends Div {
             });
         });
 
+        UI.getCurrent().getElement().getThemeList().add("dark");
         add(menu);
-
     }
 }

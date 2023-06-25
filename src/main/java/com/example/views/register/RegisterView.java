@@ -1,9 +1,7 @@
 package com.example.views.register;
 
-import com.example.components.NavigationBar;
 import com.example.components.RegistrationForm;
 import com.example.data.entity.User;
-import com.example.data.service.PasswordService;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;

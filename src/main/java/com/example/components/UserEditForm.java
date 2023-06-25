@@ -55,55 +55,42 @@ public class UserEditForm extends FormLayout {
     public H3 getUsername() {
         return username;
     }
-
     public void setUsername(H3 username) {
         this.username = username;
     }
-
     public TextField getName() {
         return name;
     }
-
     public void setName(TextField name) {
         this.name = name;
     }
-
     public EmailField getEmail() {
         return email;
     }
-
     public void setEmail(EmailField email) {
         this.email = email;
     }
-
     public Span getErrorMessageField() {
         return errorMessageField;
     }
-
     public void setErrorMessageField(Span errorMessageField) {
         this.errorMessageField = errorMessageField;
     }
-
     public Button getChangePasswordButton() {
         return changePasswordButton;
     }
-
     public void setChangePasswordButton(Button changePasswordButton) {
         this.changePasswordButton = changePasswordButton;
     }
-
     public Button getSave() {
         return save;
     }
-
     public void setSave(Button save) {
         this.save = save;
     }
-
     public Button getCancel() {
         return cancel;
     }
-
     public void setCancel(Button cancel) {
         this.cancel = cancel;
     }

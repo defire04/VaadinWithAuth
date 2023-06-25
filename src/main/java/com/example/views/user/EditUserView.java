@@ -9,9 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
 public class EditUserView extends VerticalLayout {
-
     private final UserService authService;
-
     public EditUserView(UserService authService) {
         this.authService = authService;
         addClassName("edit-view");
@@ -24,7 +22,5 @@ public class EditUserView extends VerticalLayout {
 
         UserEditFormEditor userEditFormEditor = new UserEditFormEditor(userEditForm, authService);
         userEditFormEditor.addBindingAndValidation();
-
-
     }
 }

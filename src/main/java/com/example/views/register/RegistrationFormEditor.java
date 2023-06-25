@@ -46,12 +46,9 @@ public class RegistrationFormEditor {
                 binder.writeBean(userBean);
                 confirmEmailPassword = userService.generateConfirmPasswordAndSendByEmail(userBean);
                 registrationForm.getConfirmationDialogForm().open();
-
-
             } catch (ValidationException getMessage) {
                 Notification.show("All fields must be filled").addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
-
         });
 
         registrationForm.getConfirmationDialogForm().getSave().addClickListener(event -> {
@@ -67,7 +64,6 @@ public class RegistrationFormEditor {
                 } else{
                     Notification.show("Confirm password does not match!").addThemeVariants(NotificationVariant.LUMO_ERROR);
                 }
-
             } catch (ValidationException exception) {
                 Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
@@ -81,13 +77,11 @@ public class RegistrationFormEditor {
             enablePasswordValidation = true;
             return ValidationResult.ok();
         }
-
         String pass2 = registrationForm.getPasswordConfirm().getValue();
 
         if (pass1 != null && pass1.equals(pass2)) {
             return ValidationResult.ok();
         }
-
         return ValidationResult.error("Passwords do not match");
     }
 

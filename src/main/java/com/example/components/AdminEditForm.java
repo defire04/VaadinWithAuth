@@ -9,9 +9,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 
-
 public class AdminEditForm extends FormLayout {
-
     private TextField username;
     private TextField name;
     private EmailField email;
@@ -23,8 +21,6 @@ public class AdminEditForm extends FormLayout {
     private Button refreshPassword;
     private Button block;
     private Span errorMessageField;
-
-
     public AdminEditForm() {
         addClassName("admin-edit-form");
         edit = new Button("Edit");

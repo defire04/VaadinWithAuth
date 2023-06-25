@@ -9,15 +9,12 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-
 import com.vaadin.flow.data.binder.ValidationException;
 
 
 public class UserEditFormEditor {
     private final UserEditForm userEditForm;
     private final UserService authService;
-
-
     public UserEditFormEditor(UserEditForm userEditForm, UserService authService) {
         this.userEditForm = userEditForm;
         this.authService = authService;
@@ -58,8 +55,6 @@ public class UserEditFormEditor {
         userEditForm.getCancel().addClickListener(event -> {
             UI.getCurrent().navigate(UserView.class);
         });
-
-
     }
 
     private void showSuccess() {

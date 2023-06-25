@@ -3,10 +3,10 @@ package com.example.data.service;
 
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
-import com.example.data.repository.UserRepository;
 import com.example.data.exeption.InvalidPasswordException;
 import com.example.data.exeption.UserAlreadyExists;
 import com.example.data.exeption.UserNotFoundException;
+import com.example.data.repository.UserRepository;
 import com.example.views.admin.AdminView;
 import com.example.views.logout.LogoutView;
 import com.example.views.reset_password.ResetPasswordView;
@@ -55,6 +55,7 @@ public class UserService {
 
         if (isPasswordMatch || isTempPasswordMatch) {
             if (isTempPasswordMatch) {
+                user.setPassword(null);
                 user.setMustChangePassword(true);
                 userRepository.save(user);
             }
@@ -93,8 +94,6 @@ public class UserService {
             user.setTempPassword(passwordService.hashPassword(newPassword));
 
             userRepository.save(user);
-
-
             emailSenderService.sendEmail(user.getEmail(), newPassword);
         } else {
             userRepository.save(user);
@@ -163,15 +162,13 @@ public class UserService {
 
     public void sendTempPassword(String username) {
         User user = findByUsernameOrElseThrowUserNotFoundException(username);
-        user.setMustChangePassword(true);
+
         String tempPassword = passwordService.generateRandomPassword();
         user.setTempPassword(passwordService.hashPassword(tempPassword));
 
         emailSenderService.sendEmail(user.getEmail(), tempPassword);
         userRepository.save(user);
-
     }
-
 
     public String generateConfirmPasswordAndSendByEmail(User user){
         String confirmPassword;
