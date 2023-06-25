@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
+
 public class AdminView extends VerticalLayout {
 
     public AdminView(UserService userService, AdminFormEditor adminFormEditor) {

@@ -6,6 +6,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+
+
 public class UserView extends VerticalLayout {
     public UserView(){
         Button edit = new Button("Edit profile", e ->{

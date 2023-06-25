@@ -13,13 +13,17 @@ import com.vaadin.flow.data.binder.ValueContext;
 
 public class RegistrationFormEditor {
 
-    private final UserService authService;
+    private final UserService userService;
     private RegistrationForm registrationForm;
     private boolean enablePasswordValidation;
+    private String confirmEmailPassword;
 
-    public RegistrationFormEditor(RegistrationForm registrationForm, UserService authService) {
+
+
+    public RegistrationFormEditor(RegistrationForm registrationForm, UserService userService) {
         this.registrationForm = registrationForm;
-        this.authService = authService;
+        this.userService = userService;
+
     }
 
     public void addBindingAndValidation() {
@@ -37,18 +41,38 @@ public class RegistrationFormEditor {
         binder.setStatusLabel(registrationForm.getErrorMessageField());
 
         registrationForm.getRegister().addClickListener(event -> {
+            User userBean = new User();
+            try {
+                binder.writeBean(userBean);
+                confirmEmailPassword = userService.generateConfirmPasswordAndSendByEmail(userBean);
+                registrationForm.getConfirmationDialogForm().open();
+
+
+            } catch (ValidationException getMessage) {
+                Notification.show("All fields must be filled").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+
+        });
+
+        registrationForm.getConfirmationDialogForm().getSave().addClickListener(event -> {
             try {
                 User userBean = new User();
                 binder.writeBean(userBean);
 
-                authService.register(new User(userBean.getUsername(), userBean.getPassword(),
-                        userBean.getName(), userBean.getEmail()));
+                if(confirmEmailPassword.equals(registrationForm.getConfirmationDialogForm().getConfirmPassword().getValue())){
+                    userService.register(new User(userBean.getUsername(), userBean.getPassword(),
+                            userBean.getName(), userBean.getEmail()));
+                    showSuccess(userBean);
+                    registrationForm.getConfirmationDialogForm().close();
+                } else{
+                    Notification.show("Confirm password does not match!").addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
 
-                showSuccess(userBean);
             } catch (ValidationException exception) {
                 Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
+
     }
 
     private ValidationResult passwordValidator(String pass1, ValueContext ctx) {

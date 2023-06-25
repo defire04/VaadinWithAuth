@@ -16,7 +16,6 @@ public class AdminEditForm extends FormLayout {
     private TextField name;
     private EmailField email;
     private Button edit;
-
     private Button save;
     private Button cancel;
     private Button delete;

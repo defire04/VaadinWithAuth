@@ -4,6 +4,7 @@ import com.example.components.ResetPasswordForm;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+
 public class ResetPasswordView extends VerticalLayout {
     private final UserService authService;
 

@@ -15,7 +15,6 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 public class UserEditFormEditor {
     private final UserEditForm userEditForm;
-
     private final UserService authService;
 
 

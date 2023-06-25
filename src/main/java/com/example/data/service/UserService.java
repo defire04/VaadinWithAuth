@@ -1,6 +1,7 @@
 package com.example.data.service;
 
 
+import com.example.components.NotificationWarning;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.repository.UserRepository;
@@ -13,6 +14,11 @@ import com.example.views.reset_password.ResetPasswordView;
 import com.example.views.user.EditUserView;
 import com.example.views.user.UserView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HtmlComponent;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
@@ -142,6 +148,9 @@ public class UserService {
     public void resetPassword(User editedUser) {
         User user = findByUsernameOrElseThrowUserNotFoundException(editedUser.getUsername());
 
+        user.setPassword(null);
+        user.setMustChangePassword(true);
+
         String newPassword = passwordService.generateRandomPassword();
         user.setTempPassword(passwordService.hashPassword(newPassword));
 
@@ -149,7 +158,6 @@ public class UserService {
         userRepository.save(user);
 
         logOutUserSession(editedUser.getUsername());
-
     }
 
     private void logOutUserSession(String username) {
@@ -168,6 +176,18 @@ public class UserService {
         emailSenderService.sendEmail(user.getEmail(), tempPassword);
         userRepository.save(user);
 
+    }
+
+
+    public String generateConfirmPasswordAndSendByEmail(User user){
+        String confirmPassword;
+        if(user != null && user.getEmail() != null){
+            confirmPassword = passwordService.generateRandomConfirmationPassword();
+            emailSenderService.sendEmail(user.getEmail(), confirmPassword);
+            return confirmPassword;
+        }
+
+        return null;
     }
 
     public void update(String username, User updatedUser) {
@@ -205,7 +225,6 @@ public class UserService {
         createRoutes(user);
 
         userRepository.save(user);
-
     }
 
     public record AuthorizedRoute(String route, String name, Class<? extends Component> view) {

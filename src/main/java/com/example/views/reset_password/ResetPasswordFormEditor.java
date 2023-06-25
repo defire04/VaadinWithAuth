@@ -42,6 +42,7 @@ public class ResetPasswordFormEditor {
 
         binder.setStatusLabel(resetPasswordForm.getErrorMessageField());
 
+
         resetPasswordForm.getSave().addClickListener(event -> {
             try {
                 User userBean = new User();
@@ -55,7 +56,6 @@ public class ResetPasswordFormEditor {
                 Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
-
 
 
         resetPasswordForm.getCancel().addClickListener(event -> {
@@ -82,7 +82,7 @@ public class ResetPasswordFormEditor {
 
     private void showSuccess() {
         Notification notification =
-                Notification.show("Your password updated successfully" );
+                Notification.show("Your password updated successfully");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         UI.getCurrent().navigate("home");
     }

@@ -20,9 +20,7 @@ public class RegistrationForm extends FormLayout {
     private Button register;
     private Span errorMessageField;
     private Button loginLink;
-
-//    private Button registrationConfirmationButton;
-
+    private EmailConfirmationDialogForm confirmationDialogForm;
 
     public RegistrationForm() {
         addClassName("register-form");
@@ -42,6 +40,7 @@ public class RegistrationForm extends FormLayout {
         register = new Button("Register");
 
 
+        confirmationDialogForm = new EmailConfirmationDialogForm();
         setStyles();
         add(title, username, name, email, password,
                 passwordConfirm, errorMessageField,
@@ -143,5 +142,13 @@ public class RegistrationForm extends FormLayout {
 
     public void setPasswordConfirm(PasswordField passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
+    }
+
+    public EmailConfirmationDialogForm getConfirmationDialogForm() {
+        return confirmationDialogForm;
+    }
+
+    public void setConfirmationDialogForm(EmailConfirmationDialogForm confirmationDialogForm) {
+        this.confirmationDialogForm = confirmationDialogForm;
     }
 }
