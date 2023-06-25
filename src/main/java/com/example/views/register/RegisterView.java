@@ -1,5 +1,6 @@
 package com.example.views.register;
 
+import com.example.components.NavigationBar;
 import com.example.components.RegistrationForm;
 import com.example.data.entity.User;
 import com.example.data.service.PasswordService;
@@ -18,8 +19,8 @@ import com.vaadin.flow.server.VaadinSession;
 public class RegisterView extends VerticalLayout {
 
     public RegisterView(UserService authService) {
-        addClassName("register-view");
 
+        addClassName("register-view");
         logoutIfUserLogIn();
 
         RegistrationForm registrationForm = new RegistrationForm();

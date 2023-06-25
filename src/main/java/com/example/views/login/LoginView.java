@@ -1,6 +1,7 @@
 package com.example.views.login;
 
 import com.example.components.LoginFormMy;
+import com.example.components.NavigationBar;
 import com.example.components.NotificationWarning;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
@@ -18,6 +19,7 @@ import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.lumo.Lumo;
 
 @Route(value = "login")
 @Tag("login-view")
@@ -25,18 +27,14 @@ import com.vaadin.flow.server.VaadinSession;
 public class LoginView extends Div {
 
     public LoginView(UserService authService) {
+
         addClassName("login-view");
-
-        UI.getCurrent().getElement().getThemeList().add("dark");
-
         logoutIfUserLogIn();
 
         LoginFormMy loginFormMy = new LoginFormMy();
         LoginForm loginForm = loginFormMy.getLoginForm();
 
-
         setStyles();
-
         loginForm.setForgotPasswordButtonVisible(false);
         loginForm.addLoginListener(event -> {
             try {
@@ -70,6 +68,7 @@ public class LoginView extends Div {
     }
 
     private void setStyles(){
+        UI.getCurrent().getElement().getThemeList().add("dark");
         setSizeFull();
         getStyle().setDisplay(Style.Display.FLEX)
                 .set("align-items", "center")
@@ -79,6 +78,11 @@ public class LoginView extends Div {
 
     }
 
+    private void setDarkTheme() {
+        var js = "document.documentElement.setAttribute('theme', $0)";
+
+        getElement().executeJs(js, Lumo.DARK);
+    }
     public void logoutIfUserLogIn() {
         VaadinSession session = VaadinSession.getCurrent();
         if (session.getAttribute(User.class) != null) {

@@ -2,6 +2,7 @@ package com.example.views.admin;
 
 
 import com.example.components.AdminEditForm;
+import com.example.components.NavigationBar;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
 
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class AdminView extends VerticalLayout {
 
     public AdminView(UserService userService, AdminFormEditor adminFormEditor) {
+
         addClassName("list-view");
         setSizeFull();
 

@@ -1,7 +1,6 @@
 package com.example.data.service;
 
 
-import com.example.components.NotificationWarning;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.repository.UserRepository;
@@ -14,11 +13,6 @@ import com.example.views.reset_password.ResetPasswordView;
 import com.example.views.user.EditUserView;
 import com.example.views.user.UserView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HtmlComponent;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
