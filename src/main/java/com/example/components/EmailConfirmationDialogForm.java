@@ -1,5 +1,6 @@
 package com.example.components;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Paragraph;
@@ -17,7 +18,15 @@ public class EmailConfirmationDialogForm extends Dialog {
         save = new Button("Save", VaadinIcon.CHECK.create());
         cancel = new Button("Cancel", event -> close());
         confirmPassword = new PasswordField();
+
+        setStyles();
         add(emailParagraph, confirmPassword, save, cancel);
+    }
+
+    private void setStyles() {
+        save.addClickShortcut(Key.ENTER);
+        cancel.addClickShortcut(Key.ESCAPE);
+        confirmPassword.focus();
     }
 
     public Button getSave() {

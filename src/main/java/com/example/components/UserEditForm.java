@@ -1,6 +1,7 @@
 package com.example.components;
 
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -34,6 +35,7 @@ public class UserEditForm extends FormLayout {
     }
 
     private void setStyles() {
+        UI.getCurrent().getElement().getThemeList().add("dark");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);

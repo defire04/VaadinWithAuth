@@ -44,7 +44,6 @@ public class LoginView extends Div {
                 loginForm.setError(true);
                 loginForm.setForgotPasswordButtonVisible(true);
 //                Notification.show(e.getMessage());
-
             }
             loginForm.addForgotPasswordListener(forgotPasswordEvent -> {
                 try {
@@ -62,8 +61,6 @@ public class LoginView extends Div {
                 }
             });
         });
-
-
         add(loginFormMy);
     }
 
@@ -75,14 +72,8 @@ public class LoginView extends Div {
                 .set("justify-content", "center")
                 .set("min-height", "100vh")
         ;
-
     }
 
-    private void setDarkTheme() {
-        var js = "document.documentElement.setAttribute('theme', $0)";
-
-        getElement().executeJs(js, Lumo.DARK);
-    }
     public void logoutIfUserLogIn() {
         VaadinSession session = VaadinSession.getCurrent();
         if (session.getAttribute(User.class) != null) {

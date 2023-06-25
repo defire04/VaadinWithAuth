@@ -34,6 +34,7 @@ public class LoginFormMy extends FormLayout {
         add(loginContainer);
     }
     public void setStyles() {
+
         loginForm.getStyle().clear()
                 .setDisplay(Style.Display.FLEX)
                 .setWidth("100%")

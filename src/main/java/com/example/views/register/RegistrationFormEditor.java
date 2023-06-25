@@ -3,6 +3,7 @@ package com.example.views.register;
 import com.example.components.RegistrationForm;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;

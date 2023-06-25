@@ -1,5 +1,6 @@
 package com.example.components;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -39,7 +40,6 @@ public class RegistrationForm extends FormLayout {
         errorMessageField = new Span();
         register = new Button("Register");
 
-
         confirmationDialogForm = new EmailConfirmationDialogForm();
         setStyles();
         add(title, username, name, email, password,
@@ -47,6 +47,8 @@ public class RegistrationForm extends FormLayout {
                 register, loginLink);
     }
     private void setStyles() {
+        UI.getCurrent().getElement().getThemeList().add("dark");
+
         getStyle().setMargin("0 auto");
         setMaxWidth("500px");
 
@@ -54,13 +56,15 @@ public class RegistrationForm extends FormLayout {
                 new ResponsiveStep("0", 1, ResponsiveStep.LabelsPosition.TOP),
                 new ResponsiveStep("490px", 2, ResponsiveStep.LabelsPosition.TOP));
 
-        register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
+        username.focus();
         setColspan(title, 2);
         setColspan(email, 2);
         setColspan(errorMessageField, 2);
         setColspan(register, 2);
         setColspan(loginLink, 2);
+
+        register.addClickShortcut(Key.ENTER);
+        register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
     }
     public H3 getTitle() {
         return title;
