@@ -34,16 +34,10 @@ public class LoginView extends Div {
         LoginFormMy loginFormMy = new LoginFormMy();
         LoginForm loginForm = loginFormMy.getLoginForm();
 
-        setSizeFull();
-        getStyle().setDisplay(Style.Display.FLEX)
-                .set("align-items", "center")
-                .set("justify-content", "center")
-                .set("min-height", "100vh")
-        ;
 
+        setStyles();
 
         loginForm.setForgotPasswordButtonVisible(false);
-
         loginForm.addLoginListener(event -> {
             try {
                 authService.login(event.getUsername(), event.getPassword());
@@ -54,7 +48,6 @@ public class LoginView extends Div {
 //                Notification.show(e.getMessage());
 
             }
-
             loginForm.addForgotPasswordListener(forgotPasswordEvent -> {
                 try {
                     authService.sendTempPassword(event.getUsername());
@@ -74,9 +67,17 @@ public class LoginView extends Div {
 
 
         add(loginFormMy);
-
     }
 
+    private void setStyles(){
+        setSizeFull();
+        getStyle().setDisplay(Style.Display.FLEX)
+                .set("align-items", "center")
+                .set("justify-content", "center")
+                .set("min-height", "100vh")
+        ;
+
+    }
 
     public void logoutIfUserLogIn() {
         VaadinSession session = VaadinSession.getCurrent();

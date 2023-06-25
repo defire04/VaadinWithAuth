@@ -16,8 +16,8 @@ public class EditUserView extends VerticalLayout {
         UserEditForm userEditForm = new UserEditForm();
         add(userEditForm);
 
-        UserEditBinder userEditBinder = new UserEditBinder(userEditForm, authService);
-        userEditBinder.addBindingAndValidation();
+        UserEditFormEditor userEditFormEditor = new UserEditFormEditor(userEditForm, authService);
+        userEditFormEditor.addBindingAndValidation();
 
 
     }

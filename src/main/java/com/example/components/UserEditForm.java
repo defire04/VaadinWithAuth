@@ -17,7 +17,6 @@ public class UserEditForm extends FormLayout {
     private EmailField email;
     private Span errorMessageField;
     private Button changePasswordButton;
-
     private Button save;
     private Button cancel;
 

@@ -46,4 +46,11 @@ public class NotificationWarning extends Div {
         return notification;
     }
 
+    public Div getMessage() {
+        return message;
+    }
+
+    public void setMessage(Div message) {
+        this.message = message;
+    }
 }

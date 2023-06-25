@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class AdminView extends VerticalLayout {
 
-    public AdminView(UserService userService, AdminUserEditor adminUserEditor) {
+    public AdminView(UserService userService, AdminFormEditor adminFormEditor) {
         addClassName("list-view");
         setSizeFull();
 
@@ -28,28 +28,28 @@ public class AdminView extends VerticalLayout {
         Button addNewBtn = new Button("Add new");
         HorizontalLayout toolBar = new HorizontalLayout(addNewBtn);
 
-        Div content = new Div(grid, adminUserEditor);
+        Div content = new Div(grid, adminFormEditor);
         content.addClassName("content");
         content.setSizeFull();
 
         add(toolBar, content);
 
         grid.asSingleSelect().addValueChangeListener(e -> {
-            adminUserEditor.editUser(e.getValue());
+            adminFormEditor.editUser(e.getValue());
         });
 
         AdminEditForm adminEditForm = new AdminEditForm();
-        adminUserEditor.setAdminUserEditForm(adminEditForm);
 
-        AdminEditFormBinder adminEditFormBinder = new AdminEditFormBinder(adminEditForm);
-        adminEditFormBinder.addBindingAndValidation();
+        adminFormEditor.setAdminUserEditForm(adminEditForm)
+                .addBindingAndValidation();
+
 
         addNewBtn.addClickListener(e -> {
-            adminUserEditor.editUser(new User());
+            adminFormEditor.editUser(new User());
         });
 
-        adminUserEditor.setChangeHandler(() -> {
-            adminUserEditor.setVisible(false);
+        adminFormEditor.setChangeHandler(() -> {
+            adminFormEditor.setVisible(false);
             grid.setItems(userService.getAll());
         });
     }

@@ -1,13 +1,25 @@
 package com.example.components;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextField;
 
 
+public class AdminEditForm extends FormLayout {
 
-public class AdminEditForm extends EditForm {
+    private TextField username;
+    private TextField name;
+    private EmailField email;
     private Button edit;
+
+    private Button save;
+    private Button cancel;
+    private Button delete;
     private Button addAdminButton;
     private Button refreshPassword;
     private Button block;
@@ -18,17 +30,29 @@ public class AdminEditForm extends EditForm {
         addClassName("admin-edit-form");
         edit = new Button("Edit");
 
+        username = new TextField("Username");
+        name = new TextField("Name");
+        email = new EmailField("Email");
+
+        save = new Button("Save", VaadinIcon.CHECK.create());
+        cancel = new Button("Cancel");
+        delete = new Button("Delete", VaadinIcon.TRASH.create());
         addAdminButton = new Button("Make admin");
         refreshPassword = new Button("Reset password");
         block = new Button("Block");
         errorMessageField = new Span();
 
         setStyles();
-        add(getUserForm().getUsernameTextField(),  getUserForm().getNameTextField(), getUserForm().getEmailTextField(),
-                edit, addAdminButton, refreshPassword, block, getSave(), getDelete(), getCancel());
+        add(username, name, email,
+                edit, addAdminButton, refreshPassword, block, save, delete, cancel);
     }
 
     private void setStyles() {
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        save.addClickShortcut(Key.ENTER);
+        cancel.addClickShortcut(Key.ESCAPE);
+        getStyle().setMargin("0 auto");
         getStyle().setMargin("0 auto");
         refreshPassword.addThemeVariants(ButtonVariant.LUMO_ERROR,
                 ButtonVariant.LUMO_ERROR);
@@ -41,9 +65,9 @@ public class AdminEditForm extends EditForm {
                 new ResponsiveStep("0", 3),
                 new ResponsiveStep("470px", 3, ResponsiveStep.LabelsPosition.TOP));
 
-        setColspan(getUserForm().getUsernameTextField(), 3);
-        setColspan(getUserForm().getNameTextField(), 3);
-        setColspan(getUserForm().getEmailTextField(), 3);
+        setColspan(username, 3);
+        setColspan(name, 3);
+        setColspan(email, 3);
         setColspan(errorMessageField, 2);
 
         edit.setVisible(false);
@@ -85,7 +109,56 @@ public class AdminEditForm extends EditForm {
     public Span getErrorMessageField() {
         return errorMessageField;
     }
+
     public void setErrorMessageField(Span errorMessageField) {
         this.errorMessageField = errorMessageField;
+    }
+
+    public TextField getUsername() {
+        return username;
+    }
+
+    public void setUsername(TextField username) {
+        this.username = username;
+    }
+
+    public TextField getName() {
+        return name;
+    }
+
+    public void setName(TextField name) {
+        this.name = name;
+    }
+
+    public EmailField getEmail() {
+        return email;
+    }
+
+    public void setEmail(EmailField email) {
+        this.email = email;
+    }
+
+    public Button getSave() {
+        return save;
+    }
+
+    public void setSave(Button save) {
+        this.save = save;
+    }
+
+    public Button getCancel() {
+        return cancel;
+    }
+
+    public void setCancel(Button cancel) {
+        this.cancel = cancel;
+    }
+
+    public Button getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Button delete) {
+        this.delete = delete;
     }
 }

@@ -13,13 +13,13 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 
 
-public class UserEditBinder {
+public class UserEditFormEditor {
     private final UserEditForm userEditForm;
 
     private final UserService authService;
 
 
-    public UserEditBinder(UserEditForm userEditForm, UserService authService) {
+    public UserEditFormEditor(UserEditForm userEditForm, UserService authService) {
         this.userEditForm = userEditForm;
         this.authService = authService;
     }

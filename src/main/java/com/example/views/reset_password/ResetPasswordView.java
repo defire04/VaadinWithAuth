@@ -13,7 +13,7 @@ public class ResetPasswordView extends VerticalLayout {
         ResetPasswordForm resetPasswordForm = new ResetPasswordForm();
         add(resetPasswordForm);
 
-        ResetPasswordBinder resetPasswordBinder = new ResetPasswordBinder(resetPasswordForm, authService);
-        resetPasswordBinder.addBindingAndValidation();
+        ResetPasswordFormEditor resetPasswordFormEditor = new ResetPasswordFormEditor(resetPasswordForm, authService);
+        resetPasswordFormEditor.addBindingAndValidation();
     }
 }

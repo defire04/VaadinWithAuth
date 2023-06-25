@@ -6,11 +6,15 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 
 public class RegistrationForm extends FormLayout {
     private H3 title;
-    private UserForm userForm;
+    private TextField username;
+    private TextField name;
+    private EmailField email;
     private PasswordField password;
     private PasswordField passwordConfirm;
     private Button register;
@@ -23,8 +27,10 @@ public class RegistrationForm extends FormLayout {
     public RegistrationForm() {
         addClassName("register-form");
 
+        username = new TextField("Username");
+        name = new TextField("Name");
+        email = new EmailField("Email");
         title = new H3("Register form");
-        userForm = new UserForm();
         password = new PasswordField("Password");
         passwordConfirm = new PasswordField("Confirm password");
 
@@ -37,7 +43,7 @@ public class RegistrationForm extends FormLayout {
 
 
         setStyles();
-        add(title, userForm.getUsernameTextField(), userForm.getNameTextField(), userForm.getEmailTextField(), password,
+        add(title, username, name, email, password,
                 passwordConfirm, errorMessageField,
                 register, loginLink);
     }
@@ -56,7 +62,7 @@ public class RegistrationForm extends FormLayout {
         register.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         setColspan(title, 2);
-        setColspan(userForm.getEmailTextField(), 2);
+        setColspan(email, 2);
         setColspan(errorMessageField, 2);
         setColspan(register, 2);
         setColspan(loginLink, 2);
@@ -71,12 +77,28 @@ public class RegistrationForm extends FormLayout {
         this.title = title;
     }
 
-    public UserForm getUserForm() {
-        return userForm;
+    public TextField getUsername() {
+        return username;
     }
 
-    public void setUserForm(UserForm userForm) {
-        this.userForm = userForm;
+    public void setUsername(TextField username) {
+        this.username = username;
+    }
+
+    public TextField getName() {
+        return name;
+    }
+
+    public void setName(TextField name) {
+        this.name = name;
+    }
+
+    public EmailField getEmail() {
+        return email;
+    }
+
+    public void setEmail(EmailField email) {
+        this.email = email;
     }
 
     public String getPassword() {

@@ -10,17 +10,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.dom.Style;
 
 public class LoginFormMy extends FormLayout {
-
     private LoginForm loginForm;
     private VerticalLayout verticalLayout;
     private HorizontalLayout horizontalLayout;
     private Button register;
-
     private Div loginContainer;
 
     public LoginFormMy() {
-
-
         loginForm = new LoginForm();
         verticalLayout = new VerticalLayout();
         horizontalLayout = new HorizontalLayout();
@@ -58,32 +54,31 @@ public class LoginFormMy extends FormLayout {
     public LoginForm getLoginForm() {
         return loginForm;
     }
-
     public void setLoginForm(LoginForm loginForm) {
         this.loginForm = loginForm;
     }
-
     public VerticalLayout getVerticalLayout() {
         return verticalLayout;
     }
-
     public void setVerticalLayout(VerticalLayout verticalLayout) {
         this.verticalLayout = verticalLayout;
     }
-
     public HorizontalLayout getHorizontalLayout() {
         return horizontalLayout;
     }
-
     public void setHorizontalLayout(HorizontalLayout horizontalLayout) {
         this.horizontalLayout = horizontalLayout;
     }
-
     public Button getRegister() {
         return register;
     }
-
     public void setRegister(Button register) {
         this.register = register;
+    }
+    public Div getLoginContainer() {
+        return loginContainer;
+    }
+    public void setLoginContainer(Div loginContainer) {
+        this.loginContainer = loginContainer;
     }
 }

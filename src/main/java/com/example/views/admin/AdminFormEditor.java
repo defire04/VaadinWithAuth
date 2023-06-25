@@ -7,36 +7,40 @@ import com.example.data.entity.User;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
 @SpringComponent
 @UIScope
-public class AdminUserEditor extends VerticalLayout implements KeyNotifier {
+public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
     private final UserService userService;
     private User user;
-    private final Binder<User> binder = new Binder<>(User.class);
+    private final BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
     private ChangeHandler changeHandler;
 
-
+    private AdminEditForm adminEditForm;
     public interface ChangeHandler {
         void onChange();
     }
 
-    public AdminUserEditor(UserService userService) {
+    public AdminFormEditor(UserService userService) {
         this.userService = userService;
 
     }
 
-    public void setAdminUserEditForm(AdminEditForm adminEditForm){
-
+    public AdminFormEditor setAdminUserEditForm(AdminEditForm adminEditForm){
+        this.adminEditForm = adminEditForm;
 //        adminEditForm.getStyle().setMargin("0 auto");
 
         add(adminEditForm);
 
-        binder.bindInstanceFields(adminEditForm.getUserForm());
+        binder.bindInstanceFields(adminEditForm);
         setSpacing(true);
 
         addKeyPressListener(Key.ENTER, e -> saveOrUpdateUserViaAdmin());
@@ -49,6 +53,7 @@ public class AdminUserEditor extends VerticalLayout implements KeyNotifier {
         adminEditForm.getBlock().addClickListener(e -> blockUser(user));
         setVisible(false);
 
+        return this;
     }
 
     private void blockUser(User user){
@@ -95,6 +100,30 @@ public class AdminUserEditor extends VerticalLayout implements KeyNotifier {
 
     public void setChangeHandler(ChangeHandler changeHandler) {
         this.changeHandler = changeHandler;
+    }
+
+
+    public void addBindingAndValidation() {
+        binder.bindInstanceFields(adminEditForm);
+
+        binder.setStatusLabel(adminEditForm.getErrorMessageField());
+
+        adminEditForm.getSave().addClickListener(event -> {
+            try {
+                User userBean = new User();
+                binder.writeBean(userBean);
+
+                showSuccess();
+            } catch (ValidationException exception) {
+                Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+        });
+    }
+    private void showSuccess() {
+        Notification notification =
+                Notification.show("Data saved");
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
     }
 }
 
