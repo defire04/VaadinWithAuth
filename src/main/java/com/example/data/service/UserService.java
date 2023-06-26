@@ -141,6 +141,9 @@ public class UserService {
     public void resetPassword(User editedUser) {
         User user = findByUsernameOrElseThrowUserNotFoundException(editedUser.getUsername());
 
+        if(user.isMustChangePassword()){
+            return;
+        }
         user.setPassword(null);
         user.setMustChangePassword(true);
 
