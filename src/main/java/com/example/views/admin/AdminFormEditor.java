@@ -4,6 +4,7 @@ package com.example.views.admin;
 import com.example.components.AdminEditForm;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
+import com.example.data.exeption.UserNotFoundException;
 import com.example.data.service.UserService;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.notification.Notification;
@@ -79,6 +80,8 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
             changeHandler.onChange();
         } catch (ValidationException getMessage) {
             Notification.show("All fields must be filled").addThemeVariants(NotificationVariant.LUMO_ERROR);
+        } catch (UserNotFoundException userNotFoundException){
+            Notification.show(userNotFoundException.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
