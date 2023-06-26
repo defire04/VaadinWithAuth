@@ -5,7 +5,6 @@ import com.example.components.AdminEditForm;
 import com.example.data.entity.Role;
 import com.example.data.entity.User;
 import com.example.data.service.UserService;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -24,6 +23,7 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
     private ChangeHandler changeHandler;
 
     private AdminEditForm adminEditForm;
+
     public interface ChangeHandler {
         void onChange();
     }
@@ -32,7 +32,7 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
         this.userService = userService;
     }
 
-    public AdminFormEditor setAdminUserEditForm(AdminEditForm adminEditForm){
+    public AdminFormEditor setAdminUserEditForm(AdminEditForm adminEditForm) {
         this.adminEditForm = adminEditForm;
 
         add(adminEditForm);
@@ -40,46 +40,46 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
         binder.bindInstanceFields(adminEditForm);
         setSpacing(true);
 
-        addKeyPressListener(Key.ENTER, e -> saveOrUpdateUserViaAdmin());
-        adminEditForm.getRefreshPassword().addClickListener(e-> refreshPassword(user));
-        adminEditForm.getAddAdminButton().addClickListener(e -> makeAdmin(user));
-        adminEditForm.getSave().addClickListener(e -> saveOrUpdateUserViaAdmin());
-        adminEditForm.getDelete().addClickListener(e -> delete());
+        adminEditForm.getRefreshPassword().addClickListener(e -> resetPassword(user));
+        adminEditForm.getAddAdminButton().addClickListener(e -> changeRole(user, Role.ADMIN));
+        adminEditForm.getSave().addClickListener(e -> saveOrUpdateUserViaAdmin(user));
+        adminEditForm.getDelete().addClickListener(e -> delete(user));
         adminEditForm.getCancel().addClickListener(e -> cancel());
         adminEditForm.getEdit().addClickListener(e -> editUser(user));
-        adminEditForm.getBlock().addClickListener(e -> blockUser(user));
+        adminEditForm.getBlock().addClickListener(e -> changeRole(user, Role.BLOCKED));
         setVisible(false);
 
         return this;
     }
 
-    private void blockUser(User user){
-        userService.updateUserRole(user, Role.BLOCKED);
-        changeHandler.onChange();
+    private void changeRole(User user, Role role) {
+        handleExceptionWithChange(user, () -> userService.updateUserRole(user, role));
     }
 
-    private void refreshPassword(User user){
-        userService.resetPassword(user);
-        changeHandler.onChange();
+    private void resetPassword(User user) {
+        handleExceptionWithChange(user, () -> userService.resetPassword(user));
     }
 
-    private void makeAdmin(User user) {
-        userService.updateUserRole(user, Role.ADMIN);
-        changeHandler.onChange();
+    private void delete(User user) {
+        handleExceptionWithChange(user, () -> userService.delete(user));
     }
 
-    private void delete() {
-        userService.delete(user);
-        changeHandler.onChange();
-    }
-
-    private void saveOrUpdateUserViaAdmin() {
-        userService.saveOrUpdateUserViaAdmin(user);
-        changeHandler.onChange();
+    private void saveOrUpdateUserViaAdmin(User user) {
+        handleExceptionWithChange(user, () -> userService.saveOrUpdateUserViaAdmin(user));
     }
 
     private void cancel() {
         changeHandler.onChange();
+    }
+
+    private void handleExceptionWithChange(User user, Runnable action) {
+        try {
+            binder.writeBean(user);
+            action.run();
+            changeHandler.onChange();
+        } catch (ValidationException getMessage) {
+            Notification.show("All fields must be filled").addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
     public void editUser(User newUser) {
@@ -89,7 +89,6 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
         }
 
         this.user = userService.findByUsername(newUser.getUsername()).orElse(newUser);
-
         binder.setBean(user);
 
         setVisible(true);
@@ -106,17 +105,11 @@ public class AdminFormEditor extends VerticalLayout implements KeyNotifier {
         binder.setStatusLabel(adminEditForm.getErrorMessageField());
 
         adminEditForm.getSave().addClickListener(event -> {
-            try {
-                User userBean = new User();
-                binder.writeBean(userBean);
-
-                showSuccess();
-            } catch (ValidationException exception) {
-                Notification.show(exception.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
+            handleExceptionWithChange(user, this::showSuccess);
         });
         return this;
     }
+
     private void showSuccess() {
         Notification notification =
                 Notification.show("Data saved");
