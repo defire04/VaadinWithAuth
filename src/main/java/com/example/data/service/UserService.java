@@ -155,7 +155,7 @@ public class UserService {
 
     private void logOutUserSession(String username) {
         VaadinSession session = usersSession.get(username);
-        if (session != null) {
+        if (session != null && session.getSession() != null) {
             session.getSession().invalidate();
         }
     }
@@ -170,9 +170,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String generateConfirmPasswordAndSendByEmail(User user){
+    public String generateConfirmPasswordAndSendByEmail(User user) {
         String confirmPassword;
-        if(user != null && user.getEmail() != null){
+        if (user != null && user.getEmail() != null) {
             confirmPassword = passwordService.generateRandomConfirmationPassword();
             emailSenderService.sendEmail(user.getEmail(), confirmPassword);
             return confirmPassword;
